@@ -33,11 +33,7 @@ name: 'va',
 backdrop:true,
 storage: false,
 backdropPadding :1,
-onShown: function(tour) {
-        var stepElement = getTourElement(tour);
-        $(stepElement).after($('.tour-step-background'));
-        $(stepElement).after($('.tour-backdrop'));
-    }
+
 });
 tour.addSteps([
   {
@@ -45,10 +41,14 @@ tour.addSteps([
     title: "Title of my step",
     content: "Content of my step",
     container: "body",
-    
+    onShown: function(tour) {
+        var stepElement = getTourElement(tour);
+        $(stepElement).after($('.tour-step-background'));
+        $(stepElement).after($('.tour-backdrop'));
+    }
   },
   {
-    element: "#step2",
+    element: "#fileList tr:first-child",
     title: "Title of my step",
     content: "Content of my step"
   }
