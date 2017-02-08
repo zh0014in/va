@@ -26,41 +26,42 @@ $(document).ready(function () {
     }
 });
 
-function showVirtualAssistance() {
-    // Instance the tour
+// Instance the tour
 var tour = new Tour({
-name: 'va',
-backdrop:true,
-storage: false,
-backdropPadding :1,
-
+    name: 'va',
+    backdrop: true,
+    storage: false,
+    backdropPadding: 1
 });
-tour.addSteps([
-  {
-    element: "#va-upload",
-    title: "Title of my step",
-    content: "Content of my step",
-    container: "body",
-    onShown: function(tour) {
-        var stepElement = getTourElement(tour);
-        $(stepElement).after($('.tour-step-background'));
-        $(stepElement).after($('.tour-backdrop'));
-    },
-    placement: 'bottom'
-  },
-  {
-    element: "#fileList tr:first-child",
-    title: "Title of my step",
-    content: "Content of my step",
-    placement: 'bottom'
-  }
-]);
 
-// Initialize the tour
-tour.init();
+function showVirtualAssistance() {
 
-// Start the tour
-tour.start();
+    tour.addSteps([
+        {
+            element: "#va-upload",
+            title: "Title of my step",
+            content: "Content of my step",
+            container: "body",
+            onShown: function (tour) {
+                var stepElement = getTourElement(tour);
+                $(stepElement).after($('.tour-step-background'));
+                $(stepElement).after($('.tour-backdrop'));
+            },
+            placement: 'bottom'
+        },
+        {
+            element: "#fileList tr:first-child",
+            title: "Title of my step",
+            content: "Content of my step",
+            placement: 'bottom'
+        }
+    ]);
+
+    // Initialize the tour
+    tour.init();
+
+    // Start the tour
+    tour.start();
 
 
     // $("#va-upload").tooltip({
@@ -92,11 +93,15 @@ tour.start();
     // $("#va-upload").tooltip().mouseover();
 }
 
-function getTourElement(tour){
+function getTourElement(tour) {
     return tour._options.steps[tour._current].element
 }
 
 function hideTooltip() {
     $("#va-upload").tooltip("close");
     $("$va-backdrop").remove();
+}
+
+function vaGotoNextStep() {
+    tour.next();
 }
