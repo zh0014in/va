@@ -1,5 +1,11 @@
 $(document).ready(function () {
 
+$("#va-upload-form").bind('ajax:complete', function() {
+
+         // tasks to do 
+alert('uploaded');
+
+   });
 
     $("#virtualAssistant").dialog({
         resizable: false,
@@ -103,5 +109,6 @@ function hideTooltip() {
 }
 
 function vaGotoNextStep() {
+    alert("next");
     tour.next();
 }
