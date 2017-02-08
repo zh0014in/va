@@ -45,12 +45,14 @@ tour.addSteps([
         var stepElement = getTourElement(tour);
         $(stepElement).after($('.tour-step-background'));
         $(stepElement).after($('.tour-backdrop'));
-    }
+    },
+    placement: 'bottom'
   },
   {
     element: "#fileList tr:first-child",
     title: "Title of my step",
-    content: "Content of my step"
+    content: "Content of my step",
+    placement: 'bottom'
   }
 ]);
 
