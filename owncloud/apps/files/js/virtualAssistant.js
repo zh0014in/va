@@ -47,12 +47,27 @@ $(document).ready(function () {
     }
 
     function detectCloseButtonExist(){
-        detectElementExist('editor_close', vaGotoNextStep);
+        detectElementExist('editor_close', [vaGotoNextStep, detectCloseButtonDisappears]);
     }
 
-    function detectElementExist(elemId, callback){
+    function detectElementExist(elemId, callbacks){
         var interval = setInterval(function(){
             if($("#"+elemId).length){
+                clearInterval(interval);
+                for(var i = 0; i < callbacks.length; i++){
+                    callbacks[i]();
+                }
+            }
+        },100);
+    }
+
+    function detectCloseButtonDisappears(){
+        detectElementDisappears('editor_close', end);
+    }
+
+    function detectElementDisappears(elemId, callback){
+        var interval = setInterval(function(){
+            if(!$('#'+elemId).length){
                 clearInterval(interval);
                 callback();
             }
@@ -115,4 +130,8 @@ function getTourElement(tour) {
 
 function vaGotoNextStep() {
     tour.next();
+}
+
+function vaEnd(){
+    tour.end();
 }
