@@ -1,32 +1,6 @@
 $(document).ready(function () {
 
-// var observeDOM = (function(){
-//     var MutationObserver = window.MutationObserver || window.WebKitMutationObserver,
-//         eventListenerSupported = window.addEventListener;
-
-//     return function(obj, callback){
-//         if( MutationObserver ){
-//             // define a new observer
-//             var obs = new MutationObserver(function(mutations, observer){
-//                 if( mutations[0].addedNodes.length )// only when node is added
-//                     callback();
-//             });
-//             // have the observer observe foo for changes in children
-//             obs.observe( obj, { childList:true, subtree:true });
-//         }
-//         else if( eventListenerSupported ){
-            
-//             obj.addEventListener('DOMNodeInserted', callback, false);
-//             obj.addEventListener('DOMNodeRemoved', callback, false);
-//         }
-//     }
-// })();
-
-// // Observe a specific DOM element:
-// observeDOM( document.getElementById('fileList') ,function(){ 
-//     console.log('file list changed');
-// });
-    watchFileList(vaGotoNextStep);
+    watchFileList([vaGotoNextStep, detectCloseButtonExist]);
 
     $("#virtualAssistant").dialog({
         resizable: false,
@@ -52,12 +26,14 @@ $(document).ready(function () {
         });
     }
 
-    function watchFileList(callback){
+    function watchFileList(callbacks){
         var initialCount = $("#fileList tr").length;
         var interval = setInterval(function(){
             if(detectChildrenAdded('fileList', 'tr', initialCount) === true){
                 clearInterval(interval);
-                callback();
+                for(var i = 0; i < callbacks.length; i++){
+                    callbacks[i]();
+                }
             }
         },100);
     }
@@ -68,6 +44,19 @@ $(document).ready(function () {
             return true;
         }
         return currentCount;
+    }
+
+    function detectCloseButtonExist(){
+        detectElementExist('editor_close', vaGotoNextStep);
+    }
+
+    function detectElementExist(elemId, callback){
+        var interval = setInterval(function(){
+            if($("#"+elemId).length){
+                clearInterval(interval);
+                callback();
+            }
+        },100);
     }
 });
 
@@ -99,6 +88,12 @@ function showVirtualAssistance() {
             title: "Title of my step",
             content: "Content of my step",
             placement: 'bottom'
+        },
+        {
+            element: "#editor_close",
+            title: "Click to close",
+            content: "Click to return to list",
+            placement: "buttom"
         }
     ]);
 
@@ -107,47 +102,12 @@ function showVirtualAssistance() {
 
     // Start the tour
     tour.start();
-
-
-    // $("#va-upload").tooltip({
-    //     content: "<div>" +
-    //     "<p>Click here to upload</p>" +
-    //     "<div class='va-progress'>" +
-    //     "<div class='va-progressbar' style='width:20%'></div>" +
-    //     "</div>" +
-    //     "<a href='javascript:;' onclick='hideTooltip();'>ok</a>" +
-    //     "</div>",
-    //     position: {
-    //         using: function (position, feedback) {
-    //             $(this).css(position);
-    //             $("<div>")
-    //                 .addClass("arrow")
-    //                 .addClass(feedback.vertical)
-    //                 .addClass(feedback.horizontal)
-    //                 .appendTo(this);
-    //         }
-    //     },
-    //     open: function (event, ui) {
-    //         $("<div>")
-    //             .attr("id","va-backdrop")
-    //             .addClass("va-backdrop")
-    //             .appendTo('body');
-    //     }
-    // });
-
-    // $("#va-upload").tooltip().mouseover();
 }
 
 function getTourElement(tour) {
     return tour._options.steps[tour._current].element
 }
 
-function hideTooltip() {
-    $("#va-upload").tooltip("close");
-    $("$va-backdrop").remove();
-}
-
 function vaGotoNextStep() {
-    alert("next");
     tour.next();
 }
