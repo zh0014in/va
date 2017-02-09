@@ -26,58 +26,49 @@ $(document).ready(function () {
         });
     }
 
-    function watchFileList(callbacks){
+    function watchFileList(callbacks) {
         var initialCount = $("#fileList tr").length;
-        var interval = setInterval(function(){
-            if(detectChildrenAdded('fileList', 'tr', initialCount) === true){
+        var interval = setInterval(function () {
+            if (detectChildrenAdded('fileList', 'tr', initialCount) === true) {
                 clearInterval(interval);
-                for(var i = 0; i < callbacks.length; i++){
+                for (var i = 0; i < callbacks.length; i++) {
                     callbacks[i]();
                 }
             }
-        },100);
+        }, 100);
     }
 
-    function detectChildrenAdded(parentId, childElem, initialCount){
-        var currentCount = $("#"+parentId + " " + childElem).length;
-        if(currentCount > initialCount){
+    function detectChildrenAdded(parentId, childElem, initialCount) {
+        var currentCount = $("#" + parentId + " " + childElem).length;
+        if (currentCount > initialCount) {
             return true;
         }
         return currentCount;
     }
 
-    function detectCloseButtonExist(){
-        detectElementExist('editor_close', [vaGotoNextStep, detectCloseButtonClicked]);
+    function detectCloseButtonExist() {
+        detectElementExist('editor_close', [vaGotoNextStep, detectSaveButtonExist]);
     }
 
-    function detectElementExist(elemId, callbacks){
-        var interval = setInterval(function(){
-            if($("#"+elemId).length){
+    function detectSaveButtonExist() {
+        detectElementExist('editor_save', [vaGotoNextStep, detectCloseButtonClicked])
+    }
+
+    function detectElementExist(elemId, callbacks) {
+        var interval = setInterval(function () {
+            if ($("#" + elemId).length) {
                 clearInterval(interval);
-                for(var i = 0; i < callbacks.length; i++){
+                for (var i = 0; i < callbacks.length; i++) {
                     callbacks[i]();
                 }
             }
-        },100);
+        }, 100);
     }
 
-    function detectCloseButtonDisappears(){
-        detectElementDisappears('editor_close', vaEnd);
-    }
-
-    function detectCloseButtonClicked(){
-        $('#editor_close').on('click', function(){
+    function detectCloseButtonClicked() {
+        $('#editor_close').on('click', function () {
             vaEnd();
         });
-    }
-
-    function detectElementDisappears(elemId, callback){
-        var interval = setInterval(function(){
-            if(!$('#'+elemId).length){
-                clearInterval(interval);
-                callback();
-            }
-        },100);
     }
 });
 
@@ -94,8 +85,8 @@ function showVirtualAssistance() {
     tour.addSteps([
         {
             element: "#va-upload",
-            title: "Title of my step",
-            content: "Content of my step",
+            title: "1. Upload File",
+            content: "Click here to upload a file",
             container: "body",
             placement: 'bottom',
             onShown: function (tour) {
@@ -106,14 +97,25 @@ function showVirtualAssistance() {
         },
         {
             element: "#fileList tr:first-child",
-            title: "Title of my step",
-            content: "Content of my step",
+            title: "2. Share & edit",
+            content: "Mouseover and click 'share' to share this file, Click on the row to edit file",
             placement: 'bottom'
         },
         {
+            element: "#editor_save",
+            title: "3. Save",
+            content: "Click to save the changes",
+            placement: "buttom",
+            onShown: function (tour) {
+                var stepElement = getTourElement(tour);
+                $(stepElement).after($('.tour-step-background'));
+                $(stepElement).after($('.tour-backdrop'));
+            }
+        },
+        {
             element: "#editor_close",
-            title: "Click to close",
-            content: "Click to return to list",
+            title: "4. Close",
+            content: "Click to close edit page and return to file list",
             placement: "buttom",
             onShown: function (tour) {
                 var stepElement = getTourElement(tour);
@@ -138,6 +140,6 @@ function vaGotoNextStep() {
     tour.next();
 }
 
-function vaEnd(){
+function vaEnd() {
     tour.end();
 }
