@@ -67,6 +67,7 @@ $(document).ready(function () {
 
     function detectSaveButtonClicked(){
         $('#editor_save').on('click', function(){
+            vaGotoNextStep();
             detectCloseButtonClicked();
         });
     }
