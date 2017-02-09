@@ -47,7 +47,7 @@ $(document).ready(function () {
     }
 
     function detectCloseButtonExist(){
-        detectElementExist('editor_close', [vaGotoNextStep, detectCloseButtonDisappears]);
+        detectElementExist('editor_close', [vaGotoNextStep, detectCloseButtonClicked]);
     }
 
     function detectElementExist(elemId, callbacks){
@@ -63,6 +63,12 @@ $(document).ready(function () {
 
     function detectCloseButtonDisappears(){
         detectElementDisappears('editor_close', vaEnd);
+    }
+
+    function detectCloseButtonClicked(){
+        $('#editor_close').on('click', function(){
+            vaEnd();
+        });
     }
 
     function detectElementDisappears(elemId, callback){
