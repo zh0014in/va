@@ -8,7 +8,7 @@
     position: fixed;
 }
 .ace_gutter{
-  z-index: 75 !important;
+  z-index: 74 !important;
 }
 /*.ui-tooltip, .arrow:after {
     background: white;
