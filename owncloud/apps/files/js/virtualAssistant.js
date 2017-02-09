@@ -62,7 +62,7 @@ $(document).ready(function () {
     }
 
     function detectCloseButtonDisappears(){
-        detectElementDisappears('editor_close', end);
+        detectElementDisappears('editor_close', vaEnd);
     }
 
     function detectElementDisappears(elemId, callback){
