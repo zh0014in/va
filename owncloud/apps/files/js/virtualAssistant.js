@@ -1,31 +1,32 @@
 $(document).ready(function () {
 
-var observeDOM = (function(){
-    var MutationObserver = window.MutationObserver || window.WebKitMutationObserver,
-        eventListenerSupported = window.addEventListener;
+// var observeDOM = (function(){
+//     var MutationObserver = window.MutationObserver || window.WebKitMutationObserver,
+//         eventListenerSupported = window.addEventListener;
 
-    return function(obj, callback){
-        if( MutationObserver ){
-            // define a new observer
-            var obs = new MutationObserver(function(mutations, observer){
-                if( mutations[0].addedNodes.length )// only when node is added
-                    callback();
-            });
-            // have the observer observe foo for changes in children
-            obs.observe( obj, { childList:true, subtree:true });
-        }
-        else if( eventListenerSupported ){
+//     return function(obj, callback){
+//         if( MutationObserver ){
+//             // define a new observer
+//             var obs = new MutationObserver(function(mutations, observer){
+//                 if( mutations[0].addedNodes.length )// only when node is added
+//                     callback();
+//             });
+//             // have the observer observe foo for changes in children
+//             obs.observe( obj, { childList:true, subtree:true });
+//         }
+//         else if( eventListenerSupported ){
             
-            obj.addEventListener('DOMNodeInserted', callback, false);
-            obj.addEventListener('DOMNodeRemoved', callback, false);
-        }
-    }
-})();
+//             obj.addEventListener('DOMNodeInserted', callback, false);
+//             obj.addEventListener('DOMNodeRemoved', callback, false);
+//         }
+//     }
+// })();
 
-// Observe a specific DOM element:
-observeDOM( document.getElementById('fileList') ,function(){ 
-    console.log('file list changed');
-});
+// // Observe a specific DOM element:
+// observeDOM( document.getElementById('fileList') ,function(){ 
+//     console.log('file list changed');
+// });
+    watchFileList(vaGotoNextStep);
 
     $("#virtualAssistant").dialog({
         resizable: false,
@@ -49,6 +50,24 @@ observeDOM( document.getElementById('fileList') ,function(){
         $.post(path, null, function () {
 
         });
+    }
+
+    function watchFileList(callback){
+        var initialCount = $("#fileList tr").length;
+        var interval = setInterval(function(){
+            if(detectChildrenAdded('fileList', 'tr', initialCount) === true){
+                clearInterval(interval);
+                callback();
+            }
+        },100);
+    }
+
+    function detectChildrenAdded(parentId, childElem, initialCount){
+        var currentCount = $("#"+parentId + " " + childElem).length;
+        if(currentCount > initialCount){
+            return true;
+        }
+        return currentCount;
     }
 });
 
