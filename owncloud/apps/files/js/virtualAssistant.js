@@ -46,6 +46,10 @@ $(document).ready(function () {
         return currentCount;
     }
 
+    function detectCloseButtonExist() {
+        detectElementExist('editor_close', [vaGotoNextStep, detectSaveButtonExist]);
+    }
+
     function detectSaveButtonExist() {
         detectElementExist('editor_save', [vaGotoNextStep, detectSaveButtonClicked])
     }
