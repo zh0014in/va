@@ -47,7 +47,7 @@ $(document).ready(function () {
     }
 
     function detectCloseButtonExist(){
-        detectElementExist('editor_close', [vaGotoNextStep, detectCloseButtonDisappears]);
+        detectElementExist('editor_close', [vaGotoNextStep, detectCloseButtonClicked]);
     }
 
     function detectElementExist(elemId, callbacks){
