@@ -1,6 +1,6 @@
 $(document).ready(function () {
 
-    watchFileList([vaGotoNextStep, detectCloseButtonExist]);
+    watchFileList([vaGotoNextStep, detectSaveButtonExist]);
 
     $("#virtualAssistant").dialog({
         resizable: false,
