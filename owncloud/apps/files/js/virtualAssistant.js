@@ -76,12 +76,12 @@ function showVirtualAssistance() {
             title: "Title of my step",
             content: "Content of my step",
             container: "body",
+            placement: 'bottom',
             onShown: function (tour) {
                 var stepElement = getTourElement(tour);
                 $(stepElement).after($('.tour-step-background'));
                 $(stepElement).after($('.tour-backdrop'));
-            },
-            placement: 'bottom'
+            }
         },
         {
             element: "#fileList tr:first-child",
@@ -93,7 +93,12 @@ function showVirtualAssistance() {
             element: "#editor_close",
             title: "Click to close",
             content: "Click to return to list",
-            placement: "buttom"
+            placement: "buttom",
+            onShown: function (tour) {
+                var stepElement = getTourElement(tour);
+                $(stepElement).after($('.tour-step-background'));
+                $(stepElement).after($('.tour-backdrop'));
+            }
         }
     ]);
 
