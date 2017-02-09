@@ -46,12 +46,8 @@ $(document).ready(function () {
         return currentCount;
     }
 
-    function detectCloseButtonExist() {
-        detectElementExist('editor_close', [vaGotoNextStep, detectSaveButtonExist]);
-    }
-
     function detectSaveButtonExist() {
-        detectElementExist('editor_save', [vaGotoNextStep, detectCloseButtonClicked])
+        detectElementExist('editor_save', [vaGotoNextStep, detectSaveButtonClicked])
     }
 
     function detectElementExist(elemId, callbacks) {
@@ -63,6 +59,12 @@ $(document).ready(function () {
                 }
             }
         }, 100);
+    }
+
+    function detectSaveButtonClicked(){
+        $('#editor_save').on('click', function(){
+            detectCloseButtonClicked();
+        });
     }
 
     function detectCloseButtonClicked() {
