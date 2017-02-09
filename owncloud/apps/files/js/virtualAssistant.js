@@ -66,9 +66,9 @@ $(document).ready(function () {
     }
 
     function detectCloseButtonClicked(){
-        $('#editor_close').on('click', function(){
-            vaEnd();
-        });
+        // $('#editor_close').on('click', function(){
+        //     vaEnd();
+        // });
     }
 
     function detectElementDisappears(elemId, callback){
