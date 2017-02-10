@@ -51,7 +51,7 @@ $(document).ready(function () {
     }
 
     function detectSaveButtonExist() {
-        detectElementExist('editor_save', [vaGotoNextStep, detectSaveButtonClicked])
+        detectElementExist('editor_save', [vaGotoNextStep, detectSaveButtonClicked, detectCloseButtonClicked])
     }
 
     function detectElementExist(elemId, callbacks) {
@@ -68,7 +68,6 @@ $(document).ready(function () {
     function detectSaveButtonClicked(){
         $('#editor_save').on('click', function(){
             vaGotoNextStep();
-            detectCloseButtonClicked();
         });
     }
 
