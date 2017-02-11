@@ -27,14 +27,13 @@ OCP\User::checkLoggedIn();
 // Load the files we need
 OCP\Util::addStyle( 'files', 'files' );
 OCP\Util::addStyle( 'files', 'virtualAssistance' );
-OCP\Util::addStyle( 'files', 'bootstrap-tour-standalone' );
+OCP\Util::addStyle( 'files', 'va' );
 OCP\Util::addscript( 'files', 'jquery.iframe-transport' );
 OCP\Util::addscript( 'files', 'jquery.fileupload' );
 OCP\Util::addscript( 'files', 'files' );
 OCP\Util::addscript( 'files', 'filelist' );
 OCP\Util::addscript( 'files', 'fileactions' );
-//OCP\Util::addscript( 'files', 'jquery.popupoverlay' );
-OCP\Util::addscript( 'files', 'bootstrap-tour-standalone' );
+OCP\Util::addscript( 'files', 'va' );
 if(!isset($_SESSION['timezone'])){
 	OCP\Util::addscript( 'files', 'timezone' );
 }
