@@ -570,15 +570,6 @@
 
 }(jQuery);
 
-/* ========================================================================
- * Bootstrap: popover.js v3.3.7
- * http://getbootstrap.com/javascript/#popovers
- * ========================================================================
- * Copyright 2011-2016 Twitter, Inc.
- * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
- * ======================================================================== */
-
-
 +function ($) {
   'use strict';
 
@@ -682,18 +673,18 @@
 (function(window, factory) {
   if (typeof define === 'function' && define.amd) {
     return define(['jquery'], function(jQuery) {
-      return window.Tour = factory(jQuery);
+      return window.Va = factory(jQuery);
     });
   } else if (typeof exports === 'object') {
     return module.exports = factory(require('jQuery'));
   } else {
-    return window.Tour = factory(window.jQuery);
+    return window.Va = factory(window.jQuery);
   }
 })(window, function($) {
-  var Tour, document;
+  var Va, document;
   document = window.document;
-  Tour = (function() {
-    function Tour(options) {
+  Va = (function() {
+    function Va(options) {
       var storage;
       try {
         storage = window.localStorage;
@@ -745,7 +736,7 @@
       this;
     }
 
-    Tour.prototype.addSteps = function(steps) {
+    Va.prototype.addSteps = function(steps) {
       var step, _i, _len;
       for (_i = 0, _len = steps.length; _i < _len; _i++) {
         step = steps[_i];
@@ -754,12 +745,12 @@
       return this;
     };
 
-    Tour.prototype.addStep = function(step) {
+    Va.prototype.addStep = function(step) {
       this._options.steps.push(step);
       return this;
     };
 
-    Tour.prototype.getStep = function(i) {
+    Va.prototype.getStep = function(i) {
       if (this._options.steps[i] != null) {
         return $.extend({
           id: "step-" + i,
@@ -796,10 +787,10 @@
       }
     };
 
-    Tour.prototype.init = function(force) {
+    Va.prototype.init = function(force) {
       this._force = force;
       if (this.ended()) {
-        this._debug('Tour ended, init prevented.');
+        this._debug('Va ended, init prevented.');
         return this;
       }
       this.setCurrentStep();
@@ -817,7 +808,7 @@
       return this;
     };
 
-    Tour.prototype.start = function(force) {
+    Va.prototype.start = function(force) {
       var promise;
       if (force == null) {
         force = false;
@@ -832,25 +823,25 @@
       return this;
     };
 
-    Tour.prototype.next = function() {
+    Va.prototype.next = function() {
       var promise;
       promise = this.hideStep(this._current, this._current + 1);
       return this._callOnPromiseDone(promise, this._showNextStep);
     };
 
-    Tour.prototype.prev = function() {
+    Va.prototype.prev = function() {
       var promise;
       promise = this.hideStep(this._current, this._current - 1);
       return this._callOnPromiseDone(promise, this._showPrevStep);
     };
 
-    Tour.prototype.goTo = function(i) {
+    Va.prototype.goTo = function(i) {
       var promise;
       promise = this.hideStep(this._current, i);
       return this._callOnPromiseDone(promise, this.showStep, i);
     };
 
-    Tour.prototype.end = function() {
+    Va.prototype.end = function() {
       var endHelper, promise;
       endHelper = (function(_this) {
         return function(e) {
@@ -870,18 +861,18 @@
       return this._callOnPromiseDone(promise, endHelper);
     };
 
-    Tour.prototype.ended = function() {
+    Va.prototype.ended = function() {
       return !this._force && !!this._getState('end');
     };
 
-    Tour.prototype.restart = function() {
+    Va.prototype.restart = function() {
       this._removeState('current_step');
       this._removeState('end');
       this._removeState('redirect_to');
       return this.start();
     };
 
-    Tour.prototype.pause = function() {
+    Va.prototype.pause = function() {
       var step;
       step = this.getStep(this._current);
       if (!(step && step.duration)) {
@@ -896,7 +887,7 @@
       }
     };
 
-    Tour.prototype.resume = function() {
+    Va.prototype.resume = function() {
       var step;
       step = this.getStep(this._current);
       if (!(step && step.duration)) {
@@ -920,7 +911,7 @@
       }
     };
 
-    Tour.prototype.hideStep = function(i, iNext) {
+    Va.prototype.hideStep = function(i, iNext) {
       var hideDelay, hideStepHelper, promise, step;
       step = this.getStep(i);
       if (!step) {
@@ -964,10 +955,10 @@
       return promise;
     };
 
-    Tour.prototype.showStep = function(i) {
+    Va.prototype.showStep = function(i) {
       var path, promise, showDelay, showStepHelper, skipToPrevious, step;
       if (this.ended()) {
-        this._debug('Tour ended, showStep prevented.');
+        this._debug('Va ended, showStep prevented.');
         return this;
       }
       step = this.getStep(i);
@@ -1048,11 +1039,11 @@
       return promise;
     };
 
-    Tour.prototype.getCurrentStep = function() {
+    Va.prototype.getCurrentStep = function() {
       return this._current;
     };
 
-    Tour.prototype.setCurrentStep = function(value) {
+    Va.prototype.setCurrentStep = function(value) {
       if (value != null) {
         this._current = value;
         this._setState('current_step', value);
@@ -1063,11 +1054,11 @@
       return this;
     };
 
-    Tour.prototype.redraw = function() {
+    Va.prototype.redraw = function() {
       return this._showOverlayElement(this.getStep(this.getCurrentStep()).element, true);
     };
 
-    Tour.prototype._setState = function(key, value) {
+    Va.prototype._setState = function(key, value) {
       var e, keyName;
       if (this._options.storage) {
         keyName = "" + this._options.name + "_" + key;
@@ -1088,7 +1079,7 @@
       }
     };
 
-    Tour.prototype._removeState = function(key) {
+    Va.prototype._removeState = function(key) {
       var keyName;
       if (this._options.storage) {
         keyName = "" + this._options.name + "_" + key;
@@ -1101,7 +1092,7 @@
       }
     };
 
-    Tour.prototype._getState = function(key) {
+    Va.prototype._getState = function(key) {
       var keyName, value;
       if (this._options.storage) {
         keyName = "" + this._options.name + "_" + key;
@@ -1118,7 +1109,7 @@
       return value;
     };
 
-    Tour.prototype._showNextStep = function() {
+    Va.prototype._showNextStep = function() {
       var promise, showNextStepHelper, step;
       step = this.getStep(this._current);
       showNextStepHelper = (function(_this) {
@@ -1130,7 +1121,7 @@
       return this._callOnPromiseDone(promise, showNextStepHelper);
     };
 
-    Tour.prototype._showPrevStep = function() {
+    Va.prototype._showPrevStep = function() {
       var promise, showPrevStepHelper, step;
       step = this.getStep(this._current);
       showPrevStepHelper = (function(_this) {
@@ -1142,13 +1133,13 @@
       return this._callOnPromiseDone(promise, showPrevStepHelper);
     };
 
-    Tour.prototype._debug = function(text) {
+    Va.prototype._debug = function(text) {
       if (this._options.debug) {
-        return window.console.log("Bootstrap Tour '" + this._options.name + "' | " + text);
+        return window.console.log("Bootstrap Va '" + this._options.name + "' | " + text);
       }
     };
 
-    Tour.prototype._isRedirect = function(host, path, location) {
+    Va.prototype._isRedirect = function(host, path, location) {
       var currentPath;
       if ((host != null) && host !== '' && (({}.toString.call(host) === '[object RegExp]' && !host.test(location.origin)) || ({}.toString.call(host) === '[object String]' && this._isHostDifferent(host, location)))) {
         return true;
@@ -1157,7 +1148,7 @@
       return (path != null) && path !== '' && (({}.toString.call(path) === '[object RegExp]' && !path.test(currentPath)) || ({}.toString.call(path) === '[object String]' && this._isPathDifferent(path, currentPath)));
     };
 
-    Tour.prototype._isHostDifferent = function(host, location) {
+    Va.prototype._isHostDifferent = function(host, location) {
       switch ({}.toString.call(host)) {
         case '[object RegExp]':
           return !host.test(location.origin);
@@ -1168,11 +1159,11 @@
       }
     };
 
-    Tour.prototype._isPathDifferent = function(path, currentPath) {
+    Va.prototype._isPathDifferent = function(path, currentPath) {
       return this._getPath(path) !== this._getPath(currentPath) || !this._equal(this._getQuery(path), this._getQuery(currentPath)) || !this._equal(this._getHash(path), this._getHash(currentPath));
     };
 
-    Tour.prototype._isJustPathHashDifferent = function(host, path, location) {
+    Va.prototype._isJustPathHashDifferent = function(host, path, location) {
       var currentPath;
       if ((host != null) && host !== '') {
         if (this._isHostDifferent(host, location)) {
@@ -1186,7 +1177,7 @@
       return false;
     };
 
-    Tour.prototype._redirect = function(step, i, path) {
+    Va.prototype._redirect = function(step, i, path) {
       var href;
       if ($.isFunction(step.redirect)) {
         return step.redirect.call(this, path);
@@ -1206,15 +1197,15 @@
       }
     };
 
-    Tour.prototype._isOrphan = function(step) {
+    Va.prototype._isOrphan = function(step) {
       return (step.element == null) || !$(step.element).length || $(step.element).is(':hidden') && ($(step.element)[0].namespaceURI !== 'http://www.w3.org/2000/svg');
     };
 
-    Tour.prototype._isLast = function() {
+    Va.prototype._isLast = function() {
       return this._current < this._options.steps.length - 1;
     };
 
-    Tour.prototype._showPopover = function(step, i) {
+    Va.prototype._showPopover = function(step, i) {
       var $element, $tip, isOrphan, options, shouldAddSmart;
       $(".tour-" + this._options.name).remove();
       options = $.extend({}, this._options);
@@ -1261,7 +1252,7 @@
       }
     };
 
-    Tour.prototype._template = function(step, i) {
+    Va.prototype._template = function(step, i) {
       var $navigation, $next, $prev, $resume, $template, template;
       template = step.template;
       if (this._isOrphan(step) && {}.toString.call(step.orphan) !== '[object Boolean]') {
@@ -1291,7 +1282,7 @@
       return $template.clone().wrap('<div>').parent().html();
     };
 
-    Tour.prototype._reflexEvent = function(reflex) {
+    Va.prototype._reflexEvent = function(reflex) {
       if ({}.toString.call(reflex) === '[object Boolean]') {
         return 'click';
       } else {
@@ -1299,7 +1290,7 @@
       }
     };
 
-    Tour.prototype._focus = function($tip, $element, end) {
+    Va.prototype._focus = function($tip, $element, end) {
       var $next, role;
       role = end ? 'end' : 'next';
       $next = $tip.find("[data-role='" + role + "']");
@@ -1308,7 +1299,7 @@
       });
     };
 
-    Tour.prototype._reposition = function($tip, step) {
+    Va.prototype._reposition = function($tip, step) {
       var offsetBottom, offsetHeight, offsetRight, offsetWidth, originalLeft, originalTop, tipOffset;
       offsetWidth = $tip[0].offsetWidth;
       offsetHeight = $tip[0].offsetHeight;
@@ -1341,15 +1332,15 @@
       }
     };
 
-    Tour.prototype._center = function($tip) {
+    Va.prototype._center = function($tip) {
       return $tip.css('top', $(window).outerHeight() / 2 - $tip.outerHeight() / 2);
     };
 
-    Tour.prototype._replaceArrow = function($tip, delta, dimension, position) {
+    Va.prototype._replaceArrow = function($tip, delta, dimension, position) {
       return $tip.find('.arrow').css(position, delta ? 50 * (1 - delta / dimension) + '%' : '');
     };
 
-    Tour.prototype._scrollIntoView = function(step, callback) {
+    Va.prototype._scrollIntoView = function(step, callback) {
       var $element, $window, counter, height, offsetTop, scrollTop, windowHeight;
       $element = $(step.element);
       if (!$element.length) {
@@ -1385,14 +1376,14 @@
       })(this));
     };
 
-    Tour.prototype._onResize = function(callback, timeout) {
+    Va.prototype._onResize = function(callback, timeout) {
       return $(window).on("resize.tour-" + this._options.name, function() {
         clearTimeout(timeout);
         return timeout = setTimeout(callback, 100);
       });
     };
 
-    Tour.prototype._initMouseNavigation = function() {
+    Va.prototype._initMouseNavigation = function() {
       var _this;
       _this = this;
       return $(document).off("click.tour-" + this._options.name, ".popover.tour-" + this._options.name + " *[data-role='prev']").off("click.tour-" + this._options.name, ".popover.tour-" + this._options.name + " *[data-role='next']").off("click.tour-" + this._options.name, ".popover.tour-" + this._options.name + " *[data-role='end']").off("click.tour-" + this._options.name, ".popover.tour-" + this._options.name + " *[data-role='pause-resume']").on("click.tour-" + this._options.name, ".popover.tour-" + this._options.name + " *[data-role='next']", (function(_this) {
@@ -1425,7 +1416,7 @@
       });
     };
 
-    Tour.prototype._initKeyboardNavigation = function() {
+    Va.prototype._initKeyboardNavigation = function() {
       if (!this._options.keyboard) {
         return;
       }
@@ -1453,7 +1444,7 @@
       })(this));
     };
 
-    Tour.prototype._makePromise = function(result) {
+    Va.prototype._makePromise = function(result) {
       if (result && $.isFunction(result.then)) {
         return result;
       } else {
@@ -1461,7 +1452,7 @@
       }
     };
 
-    Tour.prototype._callOnPromiseDone = function(promise, cb, arg) {
+    Va.prototype._callOnPromiseDone = function(promise, cb, arg) {
       if (promise) {
         return promise.then((function(_this) {
           return function(e) {
@@ -1473,7 +1464,7 @@
       }
     };
 
-    Tour.prototype._showBackdrop = function(step) {
+    Va.prototype._showBackdrop = function(step) {
       if (this.backdrop.backgroundShown) {
         return;
       }
@@ -1484,12 +1475,12 @@
       return $(step.backdropContainer).append(this.backdrop);
     };
 
-    Tour.prototype._hideBackdrop = function() {
+    Va.prototype._hideBackdrop = function() {
       this._hideOverlayElement();
       return this._hideBackground();
     };
 
-    Tour.prototype._hideBackground = function() {
+    Va.prototype._hideBackground = function() {
       if (this.backdrop && this.backdrop.remove) {
         this.backdrop.remove();
         this.backdrop.overlay = null;
@@ -1497,7 +1488,7 @@
       }
     };
 
-    Tour.prototype._showOverlayElement = function(step, force) {
+    Va.prototype._showOverlayElement = function(step, force) {
       var $backdropElement, $element, elementData;
       $element = $(step.element);
       $backdropElement = $(step.backdropElement);
@@ -1523,7 +1514,7 @@
       return this.backdrop.$background.width(elementData.width).height(elementData.height).offset(elementData.offset);
     };
 
-    Tour.prototype._hideOverlayElement = function() {
+    Va.prototype._hideOverlayElement = function() {
       if (!this.backdrop.overlayElementShown) {
         return;
       }
@@ -1534,7 +1525,7 @@
       return this.backdrop.overlayElementShown = false;
     };
 
-    Tour.prototype._applyBackdropPadding = function(padding, data) {
+    Va.prototype._applyBackdropPadding = function(padding, data) {
       if (typeof padding === 'object') {
         if (padding.top == null) {
           padding.top = 0;
@@ -1561,13 +1552,13 @@
       return data;
     };
 
-    Tour.prototype._clearTimer = function() {
+    Va.prototype._clearTimer = function() {
       window.clearTimeout(this._timer);
       this._timer = null;
       return this._duration = null;
     };
 
-    Tour.prototype._getProtocol = function(url) {
+    Va.prototype._getProtocol = function(url) {
       url = url.split('://');
       if (url.length > 1) {
         return url[0];
@@ -1576,25 +1567,25 @@
       }
     };
 
-    Tour.prototype._getHost = function(url) {
+    Va.prototype._getHost = function(url) {
       url = url.split('//');
       url = url.length > 1 ? url[1] : url[0];
       return url.split('/')[0];
     };
 
-    Tour.prototype._getPath = function(path) {
+    Va.prototype._getPath = function(path) {
       return path.replace(/\/?$/, '').split('?')[0].split('#')[0];
     };
 
-    Tour.prototype._getQuery = function(path) {
+    Va.prototype._getQuery = function(path) {
       return this._getParams(path, '?');
     };
 
-    Tour.prototype._getHash = function(path) {
+    Va.prototype._getHash = function(path) {
       return this._getParams(path, '#');
     };
 
-    Tour.prototype._getParams = function(path, start) {
+    Va.prototype._getParams = function(path, start) {
       var param, params, paramsObject, _i, _len;
       params = path.split(start);
       if (params.length === 1) {
@@ -1610,7 +1601,7 @@
       return paramsObject;
     };
 
-    Tour.prototype._equal = function(obj1, obj2) {
+    Va.prototype._equal = function(obj1, obj2) {
       var k, obj1Keys, obj2Keys, v, _i, _len;
       if ({}.toString.call(obj1) === '[object Object]' && {}.toString.call(obj2) === '[object Object]') {
         obj1Keys = Object.keys(obj1);
@@ -1641,8 +1632,8 @@
       }
     };
 
-    return Tour;
+    return Va;
 
   })();
-  return Tour;
+  return Va;
 });

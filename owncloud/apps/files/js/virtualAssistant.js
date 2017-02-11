@@ -98,8 +98,7 @@ $(document).ready(function () {
     }
 });
 
-// Instance the tour
-var tour = new Tour({
+var va = new Va({
     name: 'va',
     backdrop: true,
     storage: false,
@@ -112,8 +111,8 @@ var tour = new Tour({
             container: "body",
             placement: 'bottom',
             template: getTemplate,
-            onShown: function (tour) {
-                var stepElement = getTourElement(tour);
+            onShown: function (va) {
+                var stepElement = getVaElement(va);
                 $(stepElement).after($('.tour-step-background'));
                 $(stepElement).after($('.tour-backdrop'));
             }
@@ -130,8 +129,8 @@ var tour = new Tour({
             title: "3. Save",
             content: "Click to save the changes",
             placement: "buttom",
-            onShown: function (tour) {
-                var stepElement = getTourElement(tour);
+            onShown: function (va) {
+                var stepElement = getVaElement(va);
                 $(stepElement).after($('.tour-step-background'));
                 $(stepElement).after($('.tour-backdrop'));
             },
@@ -142,8 +141,8 @@ var tour = new Tour({
             title: "4. Close",
             content: "Click to close edit page and return to file list",
             placement: "buttom",
-            onShown: function (tour) {
-                var stepElement = getTourElement(tour);
+            onShown: function (va) {
+                var stepElement = getVaElement(va);
                 $(stepElement).after($('.tour-step-background'));
                 $(stepElement).after($('.tour-backdrop'));
             },
@@ -153,11 +152,8 @@ var tour = new Tour({
 });
 
 function showVirtualAssistance() {
-    // Initialize the tour
-    tour.init();
-
-    // Start the tour
-    tour.start();
+    va.init();
+    va.start();
 }
 
 function getTemplate(i, step) {
@@ -176,16 +172,16 @@ function getTemplate(i, step) {
         "</div>";
 }
 
-function getTourElement(tour) {
-    return tour._options.steps[tour._current].element
+function getVaElement(va) {
+    return va._options.steps[va._current].element
 }
 
 function vaGotoNextStep() {
-    tour.next();
+    va.next();
 }
 
 function vaEnd() {
-    tour.end();
+    va.end();
     var path = OC.filePath('files', 'ajax', 'completeVirtualAssistance.php')
     $.post(path, null, function () {
 
