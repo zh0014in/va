@@ -3,6 +3,13 @@
     right: 0;
     top: 0;
 }
+#virtualAssistanceButton{
+  position: fixed;
+  top:0;
+  padding: 1.2em 2em .55em 1.2em;
+  right: 18em;
+  color: white;
+}
 .tour-step-background, 
 .tour-backdrop {
     position: fixed;

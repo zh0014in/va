@@ -1,6 +1,7 @@
 $(document).ready(function () {
 
     watchFileList([vaGotoNextStep, detectSaveButtonExist]);
+    showVirtualAssistanceButton();
 
     if ($("#assistantCompleted").length) {
         $("#virtualAssistant").dialog({
@@ -34,6 +35,9 @@ $(document).ready(function () {
         });
     }
 
+    function showVirtualAssistanceButton(){
+        $("#header").prepend("<div id='virtualAssistanceButton' onclick='showVirtualAssistance();'>Assistant</div>");
+    }
 
     function hideVirtualAssistance() {
         var path = OC.filePath('files', 'ajax', 'hideVirtualAssistance.php')
