@@ -2,31 +2,38 @@ $(document).ready(function () {
 
     watchFileList([vaGotoNextStep, detectSaveButtonExist]);
 
-    var buttons = {
-        "I need assistance": function () {
-            $(this).dialog("close");
-            showVirtualAssistance();
-        }
-    };
     if ($("#assistantCompleted").length) {
-        buttons = {
-            "I need assistance": function () {
-                $(this).dialog("close");
-                showVirtualAssistance();
-            },
-            "Never show this in the future": function () {
-                hideVirtualAssistance();
-                $(this).dialog("close");
+        $("#virtualAssistant").dialog({
+            resizable: false,
+            height: "auto",
+            width: 400,
+            modal: true,
+            buttons: {
+                "I need assistance": function () {
+                    $(this).dialog("close");
+                    showVirtualAssistance();
+                },
+                "Never show this in the future": function () {
+                    hideVirtualAssistance();
+                    $(this).dialog("close");
+                }
             }
-        }
+        });
+    } else {
+        $("#virtualAssistant").dialog({
+            resizable: false,
+            height: "auto",
+            width: 400,
+            modal: true,
+            buttons: {
+                "I need assistance": function () {
+                    $(this).dialog("close");
+                    showVirtualAssistance();
+                }
+            }
+        });
     }
-    $("#virtualAssistant").dialog({
-        resizable: false,
-        height: "auto",
-        width: 400,
-        modal: true,
-        buttons: buttons
-    });
+
 
     function hideVirtualAssistance() {
         var path = OC.filePath('files', 'ajax', 'hideVirtualAssistance.php')
