@@ -2,6 +2,7 @@ FileActions={
 	actions:{},
 	defaults:{},
 	icons:{},
+	events:[],
 	currentFile:null,
 	register:function(mime,name,icon,action){
 		if(!FileActions.actions[mime]){
@@ -13,6 +14,14 @@ FileActions={
 	setDefault:function(mime,name){
 		FileActions.defaults[mime]=name;
 	},
+    registerEvent:function (event) {
+		FileActions.events.push(event);
+    },
+    fireEvents:function (dir,filename) {
+		for(event in FileActions.events){
+            FileActions.events[event](dir,filename);
+		}
+    },
 	get:function(mime,type){
 		var actions={};
 		if(FileActions.actions.all){

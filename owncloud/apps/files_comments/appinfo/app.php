@@ -12,6 +12,7 @@
 // OCP\Util::connectHook('OC_Group', 'post_removeFromGroup', 'OC_Share', 'removeFromGroupShare');
 // $dir = isset($_GET['dir']) ? $_GET['dir'] : '/';
 	OCP\Util::addscript("files_comments", "comments");
+OCP\Util::addscript("files_comments", "commentsList");
  OCP\Util::addscript("3rdparty", "chosen/chosen.jquery.min");
 // OCP\Util::addStyle( 'files_sharing', 'sharing' );
 // OCP\Util::addStyle("3rdparty", "chosen/chosen");
