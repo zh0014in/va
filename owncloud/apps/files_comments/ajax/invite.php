@@ -6,7 +6,7 @@ OCP\JSON::checkLoggedIn();
 
 $userDirectory = '/'.OCP\USER::getUser().'/files';
 $sources = explode(';', $_POST['sources']);
-$uid_shared_with = $_POST['uid_shared_with'];
+$uid_commenting_with = $_POST['uid_shared_with'];
 $permissions = $_POST['permissions'];
 foreach ($sources as $source) {
 	$file = OC_FileCache::get($source);
@@ -15,9 +15,9 @@ foreach ($sources as $source) {
 	// Check if the file exists or if the file is being reshared
 	if ($source && $file['encrypted'] == false && (OC_FILESYSTEM::file_exists($path) && OC_FILESYSTEM::is_readable($path) || OC_Comment::getFilePath($source))) {
 		try {
-			$shared = new OC_Comment($source, $uid_shared_with, $permissions);
+			$shared = new OC_Comment($source, $uid_commenting_with, $permissions);
 			// If this is a private link, return the token
-			if ($uid_shared_with == OC_Comment::PUBLICLINK) {
+			if ($uid_commenting_with == OC_Comment::PUBLICLINK) {
 				OCP\JSON::success(array('data' => $shared->getToken()));
 			} else {
 				OCP\JSON::success();
