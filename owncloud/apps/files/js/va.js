@@ -872,45 +872,6 @@
       return this.start();
     };
 
-    Va.prototype.pause = function() {
-      var step;
-      step = this.getStep(this._current);
-      if (!(step && step.duration)) {
-        return this;
-      }
-      this._paused = true;
-      this._duration -= new Date().getTime() - this._start;
-      window.clearTimeout(this._timer);
-      this._debug("Paused/Stopped step " + (this._current + 1) + " timer (" + this._duration + " remaining).");
-      if (step.onPause != null) {
-        return step.onPause(this, this._duration);
-      }
-    };
-
-    Va.prototype.resume = function() {
-      var step;
-      step = this.getStep(this._current);
-      if (!(step && step.duration)) {
-        return this;
-      }
-      this._paused = false;
-      this._start = new Date().getTime();
-      this._duration = this._duration || step.duration;
-      this._timer = window.setTimeout((function(_this) {
-        return function() {
-          if (_this._isLast()) {
-            return _this.next();
-          } else {
-            return _this.end();
-          }
-        };
-      })(this), this._duration);
-      this._debug("Started step " + (this._current + 1) + " timer with duration " + this._duration);
-      if ((step.onResume != null) && this._duration !== step.duration) {
-        return step.onResume(this, this._duration);
-      }
-    };
-
     Va.prototype.hideStep = function(i, iNext) {
       var hideDelay, hideStepHelper, promise, step;
       step = this.getStep(i);
@@ -1019,9 +980,6 @@
             _this._scrollIntoView(step, showPopoverAndOverlay);
           } else {
             showPopoverAndOverlay();
-          }
-          if (step.duration) {
-            return _this.resume();
           }
         };
       })(this);
@@ -1262,7 +1220,6 @@
       $navigation = $template.find('.popover-navigation');
       $prev = $navigation.find('[data-role="prev"]');
       $next = $navigation.find('[data-role="next"]');
-      $resume = $navigation.find('[data-role="pause-resume"]');
       if (this._isOrphan(step)) {
         $template.addClass('orphan');
       }
@@ -1275,9 +1232,6 @@
       }
       if (step.next < 0) {
         $next.addClass('disabled').prop('disabled', true).prop('tabindex', -1);
-      }
-      if (!step.duration) {
-        $resume.remove();
       }
       return $template.clone().wrap('<div>').parent().html();
     };
@@ -1403,17 +1357,7 @@
           e.preventDefault();
           return _this.end();
         };
-      })(this)).on("click.tour-" + this._options.name, ".popover.tour-" + this._options.name + " *[data-role='pause-resume']", function(e) {
-        var $this;
-        e.preventDefault();
-        $this = $(this);
-        $this.text(_this._paused ? $this.data('pause-text') : $this.data('resume-text'));
-        if (_this._paused) {
-          return _this.resume();
-        } else {
-          return _this.pause();
-        }
-      });
+      })(this));
     };
 
     Va.prototype._initKeyboardNavigation = function() {
