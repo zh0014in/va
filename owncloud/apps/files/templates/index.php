@@ -60,6 +60,7 @@
 	</tbody>
 </table>
 <div id="editor"></div>
+<div id="comments"></div>
 <div id="uploadsize-message" title="<?php echo $l->t('Upload too large')?>">
 	<p>
 		<?php echo $l->t('The files you are trying to upload exceed the maximum size for file uploads on this server.');?>

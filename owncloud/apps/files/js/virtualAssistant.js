@@ -102,7 +102,7 @@ function showVirtualAssistance() {
             }
         },
         {
-            element: "#fileList tr:first-child",
+            element: "#fileList",
             title: "2. Share & edit",
             content: "Mouseover and click 'share' to share this file, Click on the row to edit file",
             placement: 'bottom'

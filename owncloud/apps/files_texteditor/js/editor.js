@@ -222,9 +222,17 @@ function showFileEditor(dir,filename){
 							}
 						});
 						// Add the ctrl+s event
-						window.aceEditor.commands.addCommand({							name: "save",							bindKey: {							win: "Ctrl-S",							mac: "Command-S",							sender: "editor"							},							exec: function(){
+						window.aceEditor.commands.addCommand({
+							name: "save",
+							bindKey: {
+							win: "Ctrl-S",
+							mac: "Command-S",
+							sender: "editor"
+							},
+							exec: function(){
 								doFileSave();	
-							}						});
+							}
+						});
 					});
 				} else {
 					// Failed to get the file.
