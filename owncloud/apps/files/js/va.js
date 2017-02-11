@@ -1,9 +1,6 @@
 +function ($) {
   'use strict';
 
-  // CSS TRANSITION SUPPORT (Shoutout: http://www.modernizr.com/)
-  // ============================================================
-
   function transitionEnd() {
     var el = document.createElement('bootstrap')
 
@@ -23,7 +20,6 @@
     return false // explicit for ie8 (  ._.)
   }
 
-  // http://blog.alexmaccaw.com/css-transitions
   $.fn.emulateTransitionEnd = function (duration) {
     var called = false
     var $el = this
@@ -48,15 +44,6 @@
   })
 
 }(jQuery);
-
-/* ========================================================================
- * Bootstrap: tooltip.js v3.3.7
- * http://getbootstrap.com/javascript/#tooltip
- * Inspired by the original jQuery.tipsy by Jason Frame
- * ========================================================================
- * Copyright 2011-2016 Twitter, Inc.
- * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
- * ======================================================================== */
 
 
 +function ($) {
@@ -828,12 +815,6 @@
       return this._callOnPromiseDone(promise, this._showPrevStep);
     };
 
-    Va.prototype.goTo = function(i) {
-      var promise;
-      promise = this.hideStep(this._current, i);
-      return this._callOnPromiseDone(promise, this.showStep, i);
-    };
-
     Va.prototype.end = function() {
       var endHelper, promise;
       endHelper = (function(_this) {
@@ -856,13 +837,6 @@
 
     Va.prototype.ended = function() {
       return !this._force && !!this._getState('end');
-    };
-
-    Va.prototype.restart = function() {
-      this._removeState('current_step');
-      this._removeState('end');
-      this._removeState('redirect_to');
-      return this.start();
     };
 
     Va.prototype.hideStep = function(i, iNext) {
