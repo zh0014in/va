@@ -1,4 +1,4 @@
-OC.Share={
+OC.Comments={
 	icons:[],
 	itemUsers:[],
 	itemGroups:[],
@@ -10,9 +10,9 @@ OC.Share={
 			if (result && result.status === 'success') {
 				$.each(result.data, function(item, hasPrivateLink) {
 					if (hasPrivateLink) {
-						OC.Share.icons[item] = OC.imagePath('core', 'actions/public');
+						OC.Comments.icons[item] = OC.imagePath('core', 'actions/public');
 					} else {
-						OC.Share.icons[item] = OC.imagePath('core', 'actions/shared');
+						OC.Comments.icons[item] = OC.imagePath('core', 'actions/shared');
 					}
 				});
 			}
@@ -22,9 +22,9 @@ OC.Share={
 		$.ajax({type: 'GET', url: OC.filePath('files_sharing', 'ajax', 'getitem.php'), data: { item: item }, async: false, success: function(result) {
 			if (result && result.status === 'success') {
 				var item = result.data;
-				OC.Share.itemUsers = item.users;
-				OC.Share.itemGroups = item.groups;
-				OC.Share.itemPrivateLink = item.privateLink;
+				OC.Comments.itemUsers = item.users;
+				OC.Comments.itemGroups = item.groups;
+				OC.Comments.itemPrivateLink = item.privateLink;
 			}
 		}});
 	},
@@ -58,7 +58,7 @@ OC.Share={
 		});
 	},
 	showDropDown:function(item, appendTo) {
-		OC.Share.loadItem(item);
+		OC.Comments.loadItem(item);
 		var html = '<div id="dropdown" class="drop" data-item="'+item+'">';
 		html += '<select data-placeholder="User or Group" id="share_with" class="chzen-select">';
 		html += '<option value=""></option>';
@@ -71,20 +71,11 @@ OC.Share={
 		html += '<ul id="groupList"></ul>';
 		html += '</div>';
 		html += '</div>';
-		html += '<div id="privateLink">';
-		html += '<input type="checkbox" name="privateLinkCheckbox" id="privateLinkCheckbox" value="1" /><label for="privateLinkCheckbox">Share with private link</label>';
-		html += '<br />';
-		html += '<form id="emailPrivateLink">';
-		html += '<input id="privateLinkText" style="display:none; width:90%;" />';
-		html += '<input id="email" style="display:none; width:65%;" value="" placeholder="Email link to person" />';
-		html += '<input id="emailButton" style="display:none;" type="submit" value="Send" />';
-		html += '</form>';
-		html += '</div>';
 		$(html).appendTo(appendTo);
-		if (OC.Share.usersAndGroups.length < 1) {
+		if (OC.Comments.usersAndGroups.length < 1) {
 			$.ajax({type: 'GET', url: OC.filePath('files_sharing', 'ajax', 'userautocomplete.php'), async: false, success: function(users) {
 				if (users) {
-					OC.Share.usersAndGroups = users;
+					OC.Comments.usersAndGroups = users;
 					$.each(users, function(index, user) {
 						$(user).appendTo('#share_with');
 					});
@@ -92,31 +83,28 @@ OC.Share={
 				}
 			}});
 		} else {
-			$.each(OC.Share.usersAndGroups, function(index, user) {
+			$.each(OC.Comments.usersAndGroups, function(index, user) {
 				$(user).appendTo('#share_with');
 			});
 			$('#share_with').trigger('liszt:updated');
 		}
-		if (OC.Share.itemUsers) {
-			$.each(OC.Share.itemUsers, function(index, user) {
+		if (OC.Comments.itemUsers) {
+			$.each(OC.Comments.itemUsers, function(index, user) {
 				if (user.parentFolder) {
-					OC.Share.addSharedWith(user.uid, user.permissions, false, user.parentFolder);
+					OC.Comments.addSharedWith(user.uid, user.permissions, false, user.parentFolder);
 				} else {
-					OC.Share.addSharedWith(user.uid, user.permissions, false, false);
+					OC.Comments.addSharedWith(user.uid, user.permissions, false, false);
 				}
 			});
 		}
-		if (OC.Share.itemGroups) {
-			$.each(OC.Share.itemGroups, function(index, group) {
+		if (OC.Comments.itemGroups) {
+			$.each(OC.Comments.itemGroups, function(index, group) {
 				if (group.parentFolder) {
-					OC.Share.addSharedWith(group.gid, group.permissions, group.users, group.parentFolder);
+					OC.Comments.addSharedWith(group.gid, group.permissions, group.users, group.parentFolder);
 				} else {
-					OC.Share.addSharedWith(group.gid, group.permissions, group.users, false);
+					OC.Comments.addSharedWith(group.gid, group.permissions, group.users, false);
 				}
 			});
-		}
-		if (OC.Share.itemPrivateLink) {
-			OC.Share.showPrivateLink(item, OC.Share.itemPrivateLink);
 		}
 		$('#dropdown').show('blind');
 		$('#share_with').chosen();
@@ -216,28 +204,28 @@ OC.Share={
 $(document).ready(function() {
 
 	if (typeof FileActions !== 'undefined') {
-		OC.Share.loadIcons();
-		FileActions.register('all', 'Share', function(filename) {
+		OC.Comments.loadIcons();
+		FileActions.register('all', 'Invite to comment', function(filename) {
 			// Return the correct sharing icon
 			if (scanFiles.scanning) { return; } // workaround to prevent additional http request block scanning feedback
 			var item =  $('#dir').val() + '/' + filename;
 			// Check if icon is in cache
-			if (OC.Share.icons[item]) {
-				return OC.Share.icons[item];
+			if (OC.Comments.icons[item]) {
+				return OC.Comments.icons[item];
 			} else {
 				var last = '';
-				var path = OC.Share.dirname(item);
+				var path = OC.Comments.dirname(item);
 				// Search for possible parent folders that are shared
 				while (path != last) {
-					if (OC.Share.icons[path]) {
-						OC.Share.icons[item] = OC.Share.icons[path];
-						return OC.Share.icons[item];
+					if (OC.Comments.icons[path]) {
+						OC.Comments.icons[item] = OC.Comments.icons[path];
+						return OC.Comments.icons[item];
 					}
 					last = path;
-					path = OC.Share.dirname(path);
+					path = OC.Comments.dirname(path);
 				}
-				OC.Share.icons[item] = OC.imagePath('core', 'actions/share');
-				return OC.Share.icons[item];
+				OC.Comments.icons[item] = OC.imagePath('core', 'actions/share');
+				return OC.Comments.icons[item];
 			}
 		}, function(filename) {
 			var file = $('#dir').val() + '/' + filename;
@@ -245,15 +233,15 @@ $(document).ready(function() {
 			// Check if drop down is already visible for a different file
 			if (($('#dropdown').length > 0)) {
 				if (file != $('#dropdown').data('item')) {
-					OC.Share.hideDropDown(function () {
+					OC.Comments.hideDropDown(function () {
 						$('tr').removeClass('mouseOver');
 						$('tr').filterAttr('data-file',filename).addClass('mouseOver');
-						OC.Share.showDropDown(file, appendTo);
+						OC.Comments.showDropDown(file, appendTo);
 					});
 				}
 			} else {
 				$('tr').filterAttr('data-file',filename).addClass('mouseOver');
-				OC.Share.showDropDown(file, appendTo);
+				OC.Comments.showDropDown(file, appendTo);
 			}
 		});
 	};
@@ -261,7 +249,7 @@ $(document).ready(function() {
 	$(this).click(function(event) {
 		if (!($(event.target).hasClass('drop')) && $(event.target).parents().index($('#dropdown')) == -1) {
 			if ($('#dropdown').is(':visible')) {
-				OC.Share.hideDropDown(function() {
+				OC.Comments.hideDropDown(function() {
 					$('tr').removeClass('mouseOver');
 				});
 			}
@@ -292,23 +280,23 @@ $(document).ready(function() {
 			uid_shared_with = uid_shared_with.substr(0, pos);
 			isGroup = true;
 		}
-		OC.Share.share(item, uid_shared_with, 0, function() {
+		OC.Comments.share(item, uid_shared_with, 0, function() {
 			if (isGroup) {
 				// Reload item because we don't know which users are in the group
-				OC.Share.loadItem(item);
+				OC.Comments.loadItem(item);
 				var users;
-				$.each(OC.Share.itemGroups, function(index, group) {
+				$.each(OC.Comments.itemGroups, function(index, group) {
 					if (group.gid == uid_shared_with) {
 						users = group.users;
 					}
 				});
-				OC.Share.addSharedWith(uid_shared_with, 0, users, false);
+				OC.Comments.addSharedWith(uid_shared_with, 0, users, false);
 			} else {
-				OC.Share.addSharedWith(uid_shared_with, 0, false, false);
+				OC.Comments.addSharedWith(uid_shared_with, 0, false, false);
 			}
 			// Change icon
-			if (!OC.Share.itemPrivateLink) {
-				OC.Share.icons[item] = OC.imagePath('core', 'actions/shared');
+			if (!OC.Comments.itemPrivateLink) {
+				OC.Comments.icons[item] = OC.imagePath('core', 'actions/shared');
 			}
 		});
 	});
@@ -316,40 +304,40 @@ $(document).ready(function() {
 	$('.unshare').live('click', function() {
 		var item = $('#dropdown').data('item');
 		var uid_shared_with = $(this).parent().data('uid_shared_with');
-		OC.Share.unshare(item, uid_shared_with, function() {
-			OC.Share.removeSharedWith(uid_shared_with);
+		OC.Comments.unshare(item, uid_shared_with, function() {
+			OC.Comments.removeSharedWith(uid_shared_with);
 			// Reload item to update cached users and groups for the icon check
-			OC.Share.loadItem(item);
+			OC.Comments.loadItem(item);
 			// Change icon
-			if (!OC.Share.itemPrivateLink && !OC.Share.itemUsers && !OC.Share.itemGroups) {
-				OC.Share.icons[item] = OC.imagePath('core', 'actions/share');
+			if (!OC.Comments.itemPrivateLink && !OC.Comments.itemUsers && !OC.Comments.itemGroups) {
+				OC.Comments.icons[item] = OC.imagePath('core', 'actions/share');
 			}
 		});
 	});
 	
 	$('.permissions').live('change', function() {
 		var permissions = (this.checked) ? 1 : 0;
-		OC.Share.changePermissions($('#dropdown').data('item'), $(this).parent().data('uid_shared_with'), permissions);
+		OC.Comments.changePermissions($('#dropdown').data('item'), $(this).parent().data('uid_shared_with'), permissions);
 	});
 	
 	$('#privateLinkCheckbox').live('change', function() {
 		var item = $('#dropdown').data('item');
 		if (this.checked) {
 			// Create a private link
-			OC.Share.share(item, 'public', 0, function(token) {
-				OC.Share.showPrivateLink(item, token);
+			OC.Comments.share(item, 'public', 0, function(token) {
+				OC.Comments.showPrivateLink(item, token);
 				// Change icon
-				OC.Share.icons[item] = OC.imagePath('core', 'actions/public');
+				OC.Comments.icons[item] = OC.imagePath('core', 'actions/public');
 			});
 		} else {
 			// Delete private link
-			OC.Share.unshare(item, 'public', function() {
-				OC.Share.hidePrivateLink();
+			OC.Comments.unshare(item, 'public', function() {
+				OC.Comments.hidePrivateLink();
 				// Change icon
-				if (OC.Share.itemUsers || OC.Share.itemGroups) {
-					OC.Share.icons[item] = OC.imagePath('core', 'actions/shared');
+				if (OC.Comments.itemUsers || OC.Comments.itemGroups) {
+					OC.Comments.icons[item] = OC.imagePath('core', 'actions/shared');
 				} else {
-					OC.Share.icons[item] = OC.imagePath('core', 'actions/share');
+					OC.Comments.icons[item] = OC.imagePath('core', 'actions/share');
 				}
 			});
 		}
@@ -361,6 +349,6 @@ $(document).ready(function() {
 	});
 
 	$('#emailPrivateLink').live('submit', function() {
-		OC.Share.emailPrivateLink();
+		OC.Comments.emailPrivateLink();
 	});
 });

@@ -11,9 +11,7 @@
 // OCP\Util::connectHook('OC_Group', 'post_addToGroup', 'OC_Share', 'addToGroupShare');
 // OCP\Util::connectHook('OC_Group', 'post_removeFromGroup', 'OC_Share', 'removeFromGroupShare');
 // $dir = isset($_GET['dir']) ? $_GET['dir'] : '/';
-// if ($dir != '/Shared' || OCP\Config::getAppValue('files_sharing', 'resharing', 'yes') == 'yes') {
-// 	OCP\Util::addscript("files_sharing", "share");
-// }
-// OCP\Util::addscript("3rdparty", "chosen/chosen.jquery.min");
+	OCP\Util::addscript("files_comments", "comments");
+ OCP\Util::addscript("3rdparty", "chosen/chosen.jquery.min");
 // OCP\Util::addStyle( 'files_sharing', 'sharing' );
 // OCP\Util::addStyle("3rdparty", "chosen/chosen");
