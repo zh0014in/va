@@ -1,7 +1,7 @@
 <?php
-require_once(OC::$APPSROOT . '/apps/files_sharing/lib_share.php');
+require_once(OC::$APPSROOT . '/apps/files_comments/lib_comment.php');
  
-OCP\JSON::checkAppEnabled('files_sharing');
+OCP\JSON::checkAppEnabled('files_comments');
 OCP\JSON::checkLoggedIn();
 
 $item = array();
@@ -10,11 +10,11 @@ $source = $userDirectory.$_GET['item'];
 $path = $source;
 // Search for item and shared parent folders
 while ($path != $userDirectory) {
-	if ($rows = OC_Share::getMySharedItem($path)) {
+	if ($rows = OC_Comment::getMySharedItem($path)) {
 		for ($i = 0; $i < count($rows); $i++) {
 			$uid_shared_with = $rows[$i]['uid_shared_with'];
-			if ($uid_shared_with == OC_Share::PUBLICLINK && !isset($item['privateLink'])) {
-				$token = OC_Share::getTokenFromSource($path);
+			if ($uid_shared_with == OC_Comment::PUBLICLINK && !isset($item['privateLink'])) {
+				$token = OC_Comment::getTokenFromSource($path);
 				if ($path == $source) {
 					$item['privateLink'] = $token;
 				} else {

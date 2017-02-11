@@ -13,7 +13,7 @@
 				<tr class="item">
 					<td class="source"><?php echo substr($item['source'], strlen("/".$_SESSION['user_id']."/files/"));?></td>
 					<td class="uid_shared_with"><?php echo $item['uid_shared_with'];?></td>
-					<td class="permissions"><?php echo $l->t('Read'); echo($item['permissions'] & OC_SHARE::WRITE ? ", ".$l->t('Edit') : ""); echo($item['permissions'] & OC_SHARE::DELETE ? ", ".$l->t('Delete') : "");?></td>
+					<td class="permissions"><?php echo $l->t('Read'); echo($item['permissions'] & OC_COMMENT::WRITE ? ", ".$l->t('Edit') : ""); echo($item['permissions'] & OC_COMMENT::DELETE ? ", ".$l->t('Delete') : "");?></td>
 					<td><button class="delete" data-source="<?php echo $item['source'];?>" data-uid_shared_with="<?php echo $item['uid_shared_with'];?>"><?php echo $l->t('Delete');?></button></td>
 				</tr>
 			<?php endforeach;?>

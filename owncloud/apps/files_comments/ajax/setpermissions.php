@@ -1,13 +1,13 @@
 <?php
-require_once(OC::$APPSROOT . '/apps/files_sharing/lib_share.php');
+require_once(OC::$APPSROOT . '/apps/files_comments/lib_comment.php');
 
-OCP\JSON::checkAppEnabled('files_sharing');
+OCP\JSON::checkAppEnabled('files_comments');
 OCP\JSON::checkLoggedIn();
 
 $source = '/'.OCP\USER::getUser().'/files'.$_POST['source'];
 $uid_shared_with = $_POST['uid_shared_with'];
 $permissions = $_POST['permissions'];
-OC_Share::setPermissions($source, $uid_shared_with, $permissions);
+OC_Comment::setPermissions($source, $uid_shared_with, $permissions);
 
 OCP\JSON::success();
 

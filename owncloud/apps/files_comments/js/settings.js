@@ -4,6 +4,6 @@ $(document).ready(function() {
 		if (!this.checked) {
 			checked = 0;
 		}
-		$.post(OC.filePath('files_sharing','ajax','toggleresharing.php'), 'resharing='+checked);
+		$.post(OC.filePath('files_comments','ajax','toggleresharing.php'), 'resharing='+checked);
 	});
 });

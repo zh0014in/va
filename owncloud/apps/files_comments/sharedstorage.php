@@ -20,7 +20,7 @@
  *
  */
 
-require_once( 'lib_share.php' );
+require_once( 'lib_comment.php' );
 
 /**
  * Convert target path to source path and pass the function call to the correct storage provider
@@ -46,7 +46,7 @@ class OC_Filestorage_Shared extends OC_Filestorage {
 		if (array_key_exists($target, $this->sourcePaths)) {
 			return $this->sourcePaths[$target];
 		} else {
-			$source = OC_Share::getSource($target);
+			$source = OC_Comment::getFilePath($target);
 			$this->sourcePaths[$target] = $source;
 			return $source;
 		}
@@ -66,14 +66,14 @@ class OC_Filestorage_Shared extends OC_Filestorage {
 	
 	public function rmdir($path) {
 		// The folder will be removed from the database, but won't be deleted from the owner's filesystem
-		OC_Share::unshareFromMySelf($this->datadir.$path);
+		OC_Comment::unshareFromMySelf($this->datadir.$path);
 		$this->clearFolderSizeCache($path);
 	}
 	
 	public function opendir($path) {
 		if ($path == "" || $path == "/") {
 			$path = $this->datadir.$path;
-			$sharedItems = OC_Share::getItemsInFolder($path);
+			$sharedItems = OC_Comment::getItemsInFolder($path);
 			$files = array();
 			foreach ($sharedItems as $item) {
 				// If item is in the root of the shared storage provider and the item exists add it to the fakedirs
@@ -88,7 +88,7 @@ class OC_Filestorage_Shared extends OC_Filestorage {
 			if ($source) {
 				$storage = OC_Filesystem::getStorage($source);
 				$dh = $storage->opendir($this->getInternalPath($source));
-				$modifiedItems = OC_Share::getItemsInFolder($source);
+				$modifiedItems = OC_Comment::getItemsInFolder($source);
 				if ($modifiedItems && $dh) {
 					$sources = array();
 					$targets = array();
@@ -99,7 +99,7 @@ class OC_Filestorage_Shared extends OC_Filestorage {
 						// If the item is in the current directory and the item exists add it to the arrays
 						if (dirname($item['target']) == $targetFolder && $this->file_exists($path."/".basename($item['target']))) {
 							// If the item was unshared from self, add it it to the arrays
-							if ($item['permissions'] == OC_Share::UNSHARED) {
+							if ($item['permissions'] == OC_Comment::UNSHARED) {
 								$sources[] = basename($item['source']);
 								$targets[] = "";
 							} else {
@@ -256,7 +256,7 @@ class OC_Filestorage_Shared extends OC_Filestorage {
 	public function is_writable($path) {
 		if($path == "" || $path == "/"){
 			return false;
-		}elseif (OC_Share::getPermissions($this->datadir.$path) & OC_Share::WRITE) {
+		}elseif (OC_Comment::getPermissions($this->datadir.$path) & OC_Comment::WRITE) {
 			return true;
 		} else {
 			return false;
@@ -343,17 +343,17 @@ class OC_Filestorage_Shared extends OC_Filestorage {
 		// The item will be removed from the database, but won't be touched on the owner's filesystem
 		$target = $this->datadir.$path;
 		// Check if the item is inside a shared folder
-		if (OC_Share::getParentFolders($target)) {
+		if (OC_Comment::getParentFolders($target)) {
 			// If entry for item already exists
-			if (OC_Share::getItem($target)) {
-				OC_Share::unshareFromMySelf($target, false);
+			if (OC_Comment::getItem($target)) {
+				OC_Comment::unshareFromMySelf($target, false);
 			} else {
-				OC_Share::pullOutOfFolder($target, $target);
-				OC_Share::unshareFromMySelf($target, false);
+				OC_Comment::pullOutOfFolder($target, $target);
+				OC_Comment::unshareFromMySelf($target, false);
 			}
 		// Delete the database entry
 		} else {
-			OC_Share::unshareFromMySelf($target);
+			OC_Comment::unshareFromMySelf($target);
 		}
 		$this->clearFolderSizeCache($this->getInternalPath($target));
 		return true;
@@ -363,7 +363,7 @@ class OC_Filestorage_Shared extends OC_Filestorage {
 		$oldTarget = $this->datadir.$path1;
 		$newTarget = $this->datadir.$path2;
 		// Check if the item is inside a shared folder
-		if ($folders = OC_Share::getParentFolders($oldTarget)) {
+		if ($folders = OC_Comment::getParentFolders($oldTarget)) {
 			$root1 = substr($path1, 0, strpos($path1, "/"));
 			$root2 = substr($path1, 0, strpos($path2, "/"));
 			// Prevent items from being moved into different shared folders until versioning (cut and paste) and prevent items going into 'Shared'
@@ -382,14 +382,14 @@ class OC_Filestorage_Shared extends OC_Filestorage {
 				return false;
 			// The item will be renamed in the database, but won't be touched on the owner's filesystem
 			} else {
-				OC_Share::pullOutOfFolder($oldTarget, $newTarget);
+				OC_Comment::pullOutOfFolder($oldTarget, $newTarget);
 				// If this is a folder being renamed, call setTarget in case there are any database entries inside the folder
 				if (self::is_dir($path1)) {
-					OC_Share::setTarget($oldTarget, $newTarget);
+					OC_Comment::setTarget($oldTarget, $newTarget);
 				}
 			}
 		} else {
-			OC_Share::setTarget($oldTarget, $newTarget);
+			OC_Comment::setTarget($oldTarget, $newTarget);
 		}
 		$this->clearFolderSizeCache($this->getInternalPath($oldTarget));
 		$this->clearFolderSizeCache($this->getInternalPath($newTarget));

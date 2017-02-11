@@ -1,6 +1,6 @@
 <?php
 OCP\JSON::checkLoggedIn();
-OCP\JSON::checkAppEnabled('files_sharing');
+OCP\JSON::checkAppEnabled('files_comments');
 $user = OCP\USER::getUser();
 // TODO translations
 $type = (strpos($_POST['file'], '.') === false) ? 'folder' : 'file';

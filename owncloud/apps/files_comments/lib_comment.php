@@ -23,7 +23,7 @@
 /**
  * This class manages shared items within the database. 
  */
-class OC_Share {
+class OC_Comment {
 
 	const WRITE = 1;
 	const DELETE = 2;
@@ -34,91 +34,51 @@ class OC_Share {
       
 	/**
 	 * Share an item, adds an entry into the database
-	 * @param $source The source location of the item
-	 * @param $uid_shared_with The user or group to share the item with
+	 * @param $filepath The source location of the item
+	 * @param $uid_commenting_with The user or group to share the item with
 	 * @param $permissions The permissions, use the constants WRITE and DELETE
 	 */
-	public function __construct($source, $uid_shared_with, $permissions) {
+	public function __construct($filepath, $uid_commenting_with, $permissions) {
 		$uid_owner = OCP\USER::getUser();
-		$query = OCP\DB::prepare("INSERT INTO *PREFIX*sharing VALUES(?,?,?,?,?)");
+		$query = OCP\DB::prepare("INSERT INTO *PREFIX*commenting VALUES(?,?,?)");
 		// Check if this is a reshare and use the original source
-		if ($result = OC_Share::getSource($source)) {
-			$source = $result;
+		if ($result = OC_Comment::getFilePath($filepath)) {
+			$filepath = $result;
 		}
-		if ($uid_shared_with == self::PUBLICLINK) {
-			$token = sha1("$uid_shared_with-$source");
-			$query->execute(array($uid_owner, self::PUBLICLINK, $source, $token, $permissions));
+		if ($uid_commenting_with == self::PUBLICLINK) {
+			$token = sha1("$uid_commenting_with-$filepath");
+			$query->execute(array($uid_owner, self::PUBLICLINK, $filepath, $token, $permissions));
 			$this->token = $token;
 		} else {
-			if (OC_Group::groupExists($uid_shared_with)) {
-				$gid = $uid_shared_with;
-				$uid_shared_with = OC_Group::usersInGroup($gid);
-				// Remove the owner from the list of users in the group
-				$uid_shared_with = array_diff($uid_shared_with, array($uid_owner));
-			} else if (OCP\User::userExists($uid_shared_with)) {
-				$userGroups = OC_Group::getUserGroups($uid_owner);
-				// Check if the user is in one of the owner's groups
-				foreach ($userGroups as $group) {
-					if ($inGroup = OC_Group::inGroup($uid_shared_with, $group)) {
-						$gid = null;
-						$uid_shared_with = array($uid_shared_with);
-						break;
-					}
-				}
-				if (!$inGroup) {
-					throw new Exception("You can't share with ".$uid_shared_with);
-				}
+			if (OCP\User::userExists($uid_commenting_with)) {
+
 			} else {
-				throw new Exception($uid_shared_with." is not a user");
+				throw new Exception($uid_commenting_with." is not a user");
 			}
-			foreach ($uid_shared_with as $uid) {
+			foreach ($uid_commenting_with as $uid) {
 				// Check if this item is already shared with the user
-				$checkSource = OCP\DB::prepare("SELECT source FROM *PREFIX*sharing WHERE source = ? AND uid_shared_with ".self::getUsersAndGroups($uid, false));
-				$resultCheckSource = $checkSource->execute(array($source))->fetchAll();
-				// TODO Check if the source is inside a folder
-				if (count($resultCheckSource) > 0) {
+				$checkInvited = OCP\DB::prepare("SELECT filepath FROM *PREFIX*commenting WHERE filepath = ? AND uid_commenting_with ".self::getUsersAndGroups($uid, false));
+				$resultCheckInvited = $checkInvited->execute(array($filepath))->fetchAll();
+				if (count($resultCheckInvited) > 0) {
 					if (!isset($gid)) {
-						throw new Exception("This item is already shared with ".$uid);
+						throw new Exception("This item is already invited with ".$uid);
 					} else {
 						// Skip this user if sharing with a group
 						continue;
 					}
 				}
-				// Check if the target already exists for the user, if it does append a number to the name
-				$sharedFolder = '/'.$uid.'/files/Shared';
-				$target = $sharedFolder."/".basename($source);
-				$checkTarget = OCP\DB::prepare("SELECT source FROM *PREFIX*sharing WHERE target = ? AND uid_shared_with ".self::getUsersAndGroups($uid, false)." LIMIT 1");
-				$result = $checkTarget->execute(array($target))->fetchAll();
-				if (count($result) > 0) {
-					if ($pos = strrpos($target, ".")) {
-						$name = substr($target, 0, $pos);
-						$ext = substr($target, $pos);
-					} else {
-						$name = $target;
-						$ext = "";
-					}
-					$counter = 1;
-					while (count($result) > 0) {
-						$target = $name."_".$counter.$ext;
-						$result = $checkTarget->execute(array($target))->fetchAll();
-						$counter++;
-					}
+				$query->execute(array($uid_owner, $uid, $filepath));
+
+				// send email to invite user with $uid
+                $email = OC_Preferences::getValue($uid, 'settings', 'email', '');
+                if($email == ''){
+                	throw new Exception("user email does not exist.");
 				}
-				if (isset($gid)) {
-					$uid = $uid."@".$gid;
-				}
-				$query->execute(array($uid_owner, $uid, $source, $target, $permissions));
+
+                OC_Mail::send($email,$uid,'Invite to comment file','You are invited to comment on file '.$filepath,$uid_owner);
+
 				// Update mtime of shared folder to invoke a file cache rescan
 				$rootView=new OC_FilesystemView('/');
-				if (!$rootView->is_dir($sharedFolder)) {
-					if (!$rootView->is_dir('/'.$uid.'/files')) {
-						OC_Util::tearDownFS();
-						OC_Util::setupFS($uid);
-						OC_Util::tearDownFS();
-					}
-					$rootView->mkdir($sharedFolder);
-				}
-				$rootView->touch($sharedFolder);
 			}
 		}
 	}
@@ -229,7 +189,7 @@ class OC_Share {
 		$result = $query->execute(array($source, OCP\USER::getUser()))->fetchAll();
 		if (count($result) > 0) {
 			return $result;
-		} else if ($originalSource = self::getSource($source)) {
+		} else if ($originalSource = self::getFilePath($source)) {
 			return $query->execute(array($originalSource, OCP\USER::getUser()))->fetchAll();
 		} else {
 			return false;
@@ -297,7 +257,7 @@ class OC_Share {
 	 * @param $target The target location of the item
 	 * @return Source location or false if target location is not valid
 	 */
-	public static function getSource($target) {
+	public static function getFilePath($target) {
 		$target = self::cleanPath($target);
 		$query = OCP\DB::prepare("SELECT source FROM *PREFIX*sharing WHERE target = ? AND uid_shared_with ".self::getUsersAndGroups()." LIMIT 1");
 		$result = $query->execute(array($target))->fetchAll();
@@ -344,7 +304,7 @@ class OC_Share {
 					return $result[0]['permissions'];
 				}
 			} else {
-				OCP\Util::writeLog('files_sharing',"Not existing parent folder : ".$target,OCP\Util::ERROR);
+				OCP\Util::writeLog('files_comments',"Not existing parent folder : ".$target,OCP\Util::ERROR);
 				return false;
 			}
 		}
@@ -497,7 +457,7 @@ class OC_Share {
 			$lastSource = '';
 			for ($i = 0; $i < count($result) - 1; $i++) {
 				if ($result[$i]['source'] != $lastSource) {
-					new OC_Share($result[$i]['source'], $arguments['gid'], $result[$i]['permissions']);
+					new OC_Comment($result[$i]['source'], $arguments['gid'], $result[$i]['permissions']);
 					$lastSource = $result[$i]['source'];
 				}
 			}

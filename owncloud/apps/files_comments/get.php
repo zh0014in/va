@@ -5,11 +5,11 @@ $RUNTIME_NOSETUPFS=true; //don't setup the fs yet
 $RUNTIME_APPTYPES=array('authentication');
 OC_App::loadApps($RUNTIME_APPTYPES);
 
-OCP\JSON::checkAppEnabled('files_sharing');
-require_once 'lib_share.php';
+OCP\JSON::checkAppEnabled('files_comments');
+require_once 'lib_comment.php';
 
 //get the path of the shared file
-if (isset($_GET['token']) && $source = OC_Share::getSource($_GET['token'])) {
+if (isset($_GET['token']) && $source = OC_Comment::getFilePath($_GET['token'])) {
 	$token = $_GET['token'];
 	// TODO Manipulating the string may not be the best choice. Is there an alternative?
 	$user = substr($source, 1, strpos($source, "/", 1) - 1);
