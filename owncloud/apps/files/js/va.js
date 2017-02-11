@@ -1202,7 +1202,6 @@
       $tip = $element.data('bs.popover') ? $element.data('bs.popover').tip() : $element.data('popover').tip();
       $tip.attr('id', step.id);
       this._focus($tip, $element, step.next < 0);
-      this._reposition($tip, step);
       if (isOrphan) {
         return this._center($tip);
       }
@@ -1249,39 +1248,6 @@
       return $element.on('shown.bs.popover', function() {
         return $next.focus();
       });
-    };
-
-    Va.prototype._reposition = function($tip, step) {
-      var offsetBottom, offsetHeight, offsetRight, offsetWidth, originalLeft, originalTop, tipOffset;
-      offsetWidth = $tip[0].offsetWidth;
-      offsetHeight = $tip[0].offsetHeight;
-      tipOffset = $tip.offset();
-      originalLeft = tipOffset.left;
-      originalTop = tipOffset.top;
-      offsetBottom = $(document).outerHeight() - tipOffset.top - $tip.outerHeight();
-      if (offsetBottom < 0) {
-        tipOffset.top = tipOffset.top + offsetBottom;
-      }
-      offsetRight = $('html').outerWidth() - tipOffset.left - $tip.outerWidth();
-      if (offsetRight < 0) {
-        tipOffset.left = tipOffset.left + offsetRight;
-      }
-      if (tipOffset.top < 0) {
-        tipOffset.top = 0;
-      }
-      if (tipOffset.left < 0) {
-        tipOffset.left = 0;
-      }
-      $tip.offset(tipOffset);
-      if (step.placement === 'bottom' || step.placement === 'top') {
-        if (originalLeft !== tipOffset.left) {
-          return this._replaceArrow($tip, (tipOffset.left - originalLeft) * 2, offsetWidth, 'left');
-        }
-      } else {
-        if (originalTop !== tipOffset.top) {
-          return this._replaceArrow($tip, (tipOffset.top - originalTop) * 2, offsetHeight, 'top');
-        }
-      }
     };
 
     Va.prototype._center = function($tip) {
