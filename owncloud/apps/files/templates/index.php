@@ -82,3 +82,6 @@
 	<?php echo($_['virtualAssistant']); ?>
 <?php endif; ?>
 
+<?php if(isset($_['assistantCompleted'])&& $_['assistantCompleted']==1): ?>
+<div id="assistantCompleted"></div>
+<?php endif;?>

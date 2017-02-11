@@ -68,7 +68,7 @@ opacity: 0.5;
   .va-step-backdrop{
       z-index: 1001;
   }
-
+*/
   .va-progress{
 box-sizing: content-box;
 overflow: hidden;
@@ -87,4 +87,4 @@ background-color: white;
       line-height: 10px;
       text-align: center;
       background-color: blue;
-  }*/
+  }

@@ -2,21 +2,32 @@ $(document).ready(function () {
 
     watchFileList([vaGotoNextStep, detectSaveButtonExist]);
 
+    var buttons = {
+        "I need assistance": function () {
+            $(this).dialog("close");
+            showVirtualAssistance();
+        }
+    };
+    if ($("#assistantCompleted").length) {
+        buttons = {
+            buttons: {
+                "I need assistance": function () {
+                    $(this).dialog("close");
+                    showVirtualAssistance();
+                },
+                "Never show this in the future": function () {
+                    hideVirtualAssistance();
+                    $(this).dialog("close");
+                }
+            }
+        }
+    }
     $("#virtualAssistant").dialog({
         resizable: false,
         height: "auto",
         width: 400,
         modal: true,
-        buttons: {
-            "I need assistance": function () {
-                $(this).dialog("close");
-                showVirtualAssistance();
-            },
-            Cancel: function () {
-                hideVirtualAssistance();
-                $(this).dialog("close");
-            }
-        }
+        buttons: buttons
     });
 
     function hideVirtualAssistance() {
@@ -65,8 +76,8 @@ $(document).ready(function () {
         }, 100);
     }
 
-    function detectSaveButtonClicked(){
-        $('#editor_save').on('click', function(){
+    function detectSaveButtonClicked() {
+        $('#editor_save').on('click', function () {
             vaGotoNextStep();
         });
     }
@@ -83,18 +94,15 @@ var tour = new Tour({
     name: 'va',
     backdrop: true,
     storage: false,
-    backdropPadding: 1
-});
-
-function showVirtualAssistance() {
-
-    tour.addSteps([
+    backdropPadding: 1,
+    steps: [
         {
             element: "#va-upload",
             title: "1. Upload File",
             content: "Click here to upload a file",
             container: "body",
             placement: 'bottom',
+            template: getTemplate,
             onShown: function (tour) {
                 var stepElement = getTourElement(tour);
                 $(stepElement).after($('.tour-step-background'));
@@ -105,7 +113,8 @@ function showVirtualAssistance() {
             element: "#fileList",
             title: "2. Share & edit",
             content: "Mouseover and click 'share' to share this file, Click on the row to edit file",
-            placement: 'bottom'
+            placement: 'bottom',
+            template: getTemplate
         },
         {
             element: "#editor_save",
@@ -116,7 +125,8 @@ function showVirtualAssistance() {
                 var stepElement = getTourElement(tour);
                 $(stepElement).after($('.tour-step-background'));
                 $(stepElement).after($('.tour-backdrop'));
-            }
+            },
+            template: getTemplate,
         },
         {
             element: "#editor_close",
@@ -127,15 +137,34 @@ function showVirtualAssistance() {
                 var stepElement = getTourElement(tour);
                 $(stepElement).after($('.tour-step-background'));
                 $(stepElement).after($('.tour-backdrop'));
-            }
+            },
+            template: getTemplate,
         }
-    ]);
+    ]
+});
 
+function showVirtualAssistance() {
     // Initialize the tour
     tour.init();
 
     // Start the tour
     tour.start();
+}
+
+function getTemplate(i, step) {
+    return "<div class='popover tour'>" +
+        "<div class='arrow' ></div>" +
+        "<h3 class='popover-title'></h3>" +
+        "<div class='popover-content'></div>" +
+        "<div class='va-progress'>" +
+        "<div class='va-progressbar' style='width:" + ((i + 1) * 100 / 4) + "%'>" +
+        "</div>" +
+        "</div>" +
+        "<div class='popover-navigation'>" +
+        "<button class='btn btn-default' data-role='prev'>« Prev</button>" +
+        "<button class='btn btn-default' data-role='next'>Next »</button>" +
+        "</div>" +
+        "</div>";
 }
 
 function getTourElement(tour) {
@@ -148,4 +177,8 @@ function vaGotoNextStep() {
 
 function vaEnd() {
     tour.end();
+    var path = OC.filePath('files', 'ajax', 'completeVirtualAssistance.php')
+    $.post(path, null, function () {
+
+    });
 }

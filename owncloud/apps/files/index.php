@@ -99,6 +99,9 @@ OCP\Util::addscript( 'files', 'virtualAssistant' );
 if($showAssistant == 1){
 	$virtualAssistant = new OCP\Template( 'files', 'part.virtualAssistant', '' );
 	$tmpl->assign( 'virtualAssistant', $virtualAssistant->fetchPage() );
+
+	$assistantCompleted=OC_Preferences::getValue(OC_User::getUser(), 'files','completeAssistant', 0);
+	$tmpl->assign( 'assistantCompleted', $assistantCompleted );
 }
 
 $tmpl->assign( 'fileList', $list->fetchPage() );
@@ -109,7 +112,6 @@ $tmpl->assign( 'files', $files );
 $tmpl->assign( 'uploadMaxFilesize', $maxUploadFilesize);
 $tmpl->assign( 'uploadMaxHumanFilesize', OCP\Util::humanFileSize($maxUploadFilesize));
 $tmpl->assign( 'allowZipDownload', intval(OCP\Config::getSystemValue('allowZipDownload', true)));
-// $tmpl->assign('showAssistant', $showAssistant);
 $tmpl->printPage();
 
 ?>
