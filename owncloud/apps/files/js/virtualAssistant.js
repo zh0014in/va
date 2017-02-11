@@ -10,15 +10,13 @@ $(document).ready(function () {
     };
     if ($("#assistantCompleted").length) {
         buttons = {
-            buttons: {
-                "I need assistance": function () {
-                    $(this).dialog("close");
-                    showVirtualAssistance();
-                },
-                "Never show this in the future": function () {
-                    hideVirtualAssistance();
-                    $(this).dialog("close");
-                }
+            "I need assistance": function () {
+                $(this).dialog("close");
+                showVirtualAssistance();
+            },
+            "Never show this in the future": function () {
+                hideVirtualAssistance();
+                $(this).dialog("close");
             }
         }
     }
