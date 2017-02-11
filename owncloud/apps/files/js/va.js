@@ -794,11 +794,6 @@
       }
       this.setCurrentStep();
       this._initMouseNavigation();
-      this._onResize((function(_this) {
-        return function() {
-          return _this.showStep(_this._current);
-        };
-      })(this));
       if (this._current !== null) {
         this.showStep(this._current);
       }
@@ -1292,13 +1287,6 @@
           }
         };
       })(this));
-    };
-
-    Va.prototype._onResize = function(callback, timeout) {
-      return $(window).on("resize.tour-" + this._options.name, function() {
-        clearTimeout(timeout);
-        return timeout = setTimeout(callback, 100);
-      });
     };
 
     Va.prototype._initMouseNavigation = function() {
