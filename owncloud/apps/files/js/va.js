@@ -696,7 +696,6 @@
         steps: [],
         container: 'body',
         autoscroll: true,
-        keyboard: true,
         storage: storage,
         debug: false,
         backdrop: false,
@@ -795,7 +794,6 @@
       }
       this.setCurrentStep();
       this._initMouseNavigation();
-      this._initKeyboardNavigation();
       this._onResize((function(_this) {
         return function() {
           return _this.showStep(_this._current);
@@ -1356,34 +1354,6 @@
         return function(e) {
           e.preventDefault();
           return _this.end();
-        };
-      })(this));
-    };
-
-    Va.prototype._initKeyboardNavigation = function() {
-      if (!this._options.keyboard) {
-        return;
-      }
-      return $(document).on("keyup.tour-" + this._options.name, (function(_this) {
-        return function(e) {
-          if (!e.which) {
-            return;
-          }
-          switch (e.which) {
-            case 39:
-              e.preventDefault();
-              if (_this._isLast()) {
-                return _this.next();
-              } else {
-                return _this.end();
-              }
-              break;
-            case 37:
-              e.preventDefault();
-              if (_this._current > 0) {
-                return _this.prev();
-              }
-          }
         };
       })(this));
     };
