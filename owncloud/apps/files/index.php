@@ -82,7 +82,7 @@ foreach (OC_Comment::getCommentingFilepaths() as $i){
     if($file['directory']=='/'){
         $file['directory']='';
     }
-
+	$file['isCommenting'] = true;
     $files[] = $file;
 }
 
