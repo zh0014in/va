@@ -1,6 +1,8 @@
 function setEditorSize(){
 	// Sets the size of the text editor window.
 	fillWindow($('#editor'));
+	var width = $('#editor').width() - 300;
+	$('#editor').css('width', width + 'px');
 }
 
 function getFileExtension(file){
