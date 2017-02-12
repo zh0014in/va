@@ -122,7 +122,12 @@ var va = new Va({
             title: "2. Share & edit",
             content: "Mouseover and click 'share' to share this file, Click on the row to edit file",
             placement: 'bottom',
-            template: getTemplate
+            template: getTemplate,
+            onShown: function (va) {
+                var stepElement = getVaElement(va);
+                $(stepElement).after($('.tour-step-background'));
+                $(stepElement).after($('.tour-backdrop'));
+            }
         },
         {
             element: "#editor_save",
