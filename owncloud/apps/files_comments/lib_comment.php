@@ -73,7 +73,7 @@ class OC_Comment {
 			}
 
             try {
-                OC_Mail::send($email, $uid_commenting_with, 'Invite to comment file', 'You are invited to comment on file ' . $filepath, $sender);
+                OC_Mail::send($email, $uid_commenting_with, 'Invite to comment file', 'You are invited to comment on file ' . $filepath, $sender,$uid_owner);
             }
             catch (Exception $exception){
             	//
