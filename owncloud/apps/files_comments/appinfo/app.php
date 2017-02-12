@@ -1,6 +1,5 @@
 <?php
 
-// require_once('apps/files_sharing/sharedstorage.php');
 
  //OC::$CLASSPATH['OC_Share'] = "apps/files_comments/lib_comment.php";
 // OCP\App::registerAdmin('files_sharing', 'settings');
