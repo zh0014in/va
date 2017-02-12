@@ -22,10 +22,13 @@ if ($owner) {
         $root = '';
     }
     $filepath = $root . $filepath;
-    OC_Comment::checkCanComment($user, $filepath);
-
-    OC_Comment::addComment($owner, $user, $filepath, $body);
-    OCP\JSON::success(array('data' => $body));
+    try {
+        OC_Comment::checkCanComment($user, $filepath);
+        OC_Comment::addComment($owner, $user, $filepath, $body);
+        OCP\JSON::success(array('data' => $body));
+    }catch (Exception $exception){
+        OCP\JSON::error(array('data' => array('message' => $exception->getMessage())));
+    }
 } else {
     OCP\JSON::error(array('data' => array('message' => 'Onwer of file is not found.')));
 }
