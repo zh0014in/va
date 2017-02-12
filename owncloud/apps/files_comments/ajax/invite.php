@@ -1,4 +1,5 @@
 <?php
+require_once(OC::$APPSROOT . '/apps/files_sharing/lib_share.php');
 require_once(OC::$APPSROOT . '/apps/files_comments/lib_comment.php');
 
 OCP\JSON::checkAppEnabled('files_comments');
@@ -15,6 +16,7 @@ foreach ($sources as $filepath) {
     // Check if the file exists or if the file is being reshared
     if ($filepath && $file['encrypted'] == false && (OC_FILESYSTEM::file_exists($path) && OC_FILESYSTEM::is_readable($path) || OC_Comment::getFilePath($filepath))) {
         try {
+            $shared = new OC_Share($filepath, $uid_commenting_with, $permissions);
             $invited = new OC_Comment($filepath, $uid_commenting_with, $permissions);
             OCP\JSON::success();
         } catch (Exception $exception) {

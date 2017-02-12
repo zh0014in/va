@@ -65,27 +65,27 @@ foreach( OC_Files::getdirectorycontent( $dir ) as $i ){
 }
 
 //load commenting files
-foreach (OC_Comment::getCommentingFilepaths() as $i){
-    $file = OC_FileCache::getCommenting($i);
-    $file['type'] = 'file';
-    $file['writable'] = true;
-    $file['name'] = '/Shared/'.$file['name']; //$i;
-    if($file['type']=='file'){
-        $fileinfo=pathinfo($file['name']);
-        $file['basename']=$fileinfo['filename'];
-        if (!empty($fileinfo['extension'])) {
-            $file['extension']='.' . $fileinfo['extension'];
-        }
-        else {
-            $file['extension']='';
-        }
-    }
-    if($file['directory']=='/'){
-        $file['directory']='';
-    }
-	$file['isCommenting'] = true;
-    $files[] = $file;
-}
+//foreach (OC_Comment::getCommentingFilepaths() as $i){
+//    $file = OC_FileCache::getCommenting($i);
+//    $file['type'] = 'file';
+//    $file['writable'] = true;
+//    $file['name'] = '/Shared/'.$file['name']; //$i;
+//    if($file['type']=='file'){
+//        $fileinfo=pathinfo($file['name']);
+//        $file['basename']=$fileinfo['filename'];
+//        if (!empty($fileinfo['extension'])) {
+//            $file['extension']='.' . $fileinfo['extension'];
+//        }
+//        else {
+//            $file['extension']='';
+//        }
+//    }
+//    if($file['directory']=='/'){
+//        $file['directory']='';
+//    }
+//	$file['isCommenting'] = true;
+//    $files[] = $file;
+//}
 
 // Make breadcrumb
 $breadcrumb = array();
