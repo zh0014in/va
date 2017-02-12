@@ -5,7 +5,7 @@ OCP\JSON::checkAppEnabled('files_comments');
 OCP\JSON::checkLoggedIn();
 
 $source = '/'.OCP\USER::getUser().'/files'.$_POST['source'];
-$uid_shared_with = $_POST['uid_shared_with'];
+$uid_shared_with = $_POST['uid_commenting_with'];
 $permissions = $_POST['permissions'];
 OC_Comment::setPermissions($source, $uid_shared_with, $permissions);
 

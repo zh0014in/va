@@ -29,7 +29,7 @@
  */
 class OC_FileCache{
 	private static $savedData=array();
-	
+
 	/**
 	 * get the filesystem info from the cache
 	 * @param string path
@@ -68,6 +68,22 @@ class OC_FileCache{
 			return false;
 		}
 	}
+
+	public static function getOwner($path){
+	    $root=OC_Filesystem::getRoot();
+        if($root=='/'){
+            $root='';
+        }
+        $path=$root.$path;
+        $query=OC_DB::prepare('SELECT user FROM *PREFIX*fscache WHERE path_hash=?');
+        $result=$query->execute(array(md5($path)))->fetchRow();
+        if(is_array($result)){
+            return $result['user'];
+        }else{
+            OC_Log::write('files','get(): file not found in cache ('.$path.')',OC_Log::DEBUG);
+            return false;
+        }
+    }
 
 	/**
 	 * put filesystem info in the cache
@@ -142,7 +158,7 @@ class OC_FileCache{
 			$queryParts[]='mimepart=?';
 		}
 		$arguments[]=$id;
-		
+
 		$sql = 'UPDATE *PREFIX*fscache SET '.implode(' , ',$queryParts).' WHERE id=?';
 		$query=OC_DB::prepare($sql);
 		$result=$query->execute($arguments);
@@ -205,7 +221,7 @@ class OC_FileCache{
 			$query->execute(array($file));
 		}
 	}
-	
+
 	/**
 	 * return array of filenames matching the querty
 	 * @param string $query
@@ -318,7 +334,7 @@ class OC_FileCache{
 			return -1;
 		}
 	}
-	
+
 	/**
 	 * get the file id as used in the cache
 	 * @param string path
@@ -335,7 +351,7 @@ class OC_FileCache{
 		$path=$root.$path;
 		return self::getFileId($path);
 	}
-	
+
 	/**
 	 * get the file path from the id, relative to the home folder of the user
 	 * @param int id
@@ -381,7 +397,7 @@ class OC_FileCache{
 		}else{
 			$view=new OC_FilesystemView(($root=='/')?'':$root);
 		}
-		
+
 		$path=$params['path'];
 		$fullPath=$view->getRoot().$path;
 		$mimetype=$view->getMimeType($path);
@@ -410,7 +426,7 @@ class OC_FileCache{
 		}
 		self::increaseSize(dirname($fullPath),$size-$cachedSize);
 	}
-	
+
 	public static function getCached($path,$root=''){
 		if(!$root){
 			$root=OC_Filesystem::getRoot();
@@ -436,7 +452,7 @@ class OC_FileCache{
 			}
 		}
 	}
-	
+
 	private static function getCachedSize($path,$root){
 		if(!$root){
 			$root=OC_Filesystem::getRoot();
@@ -686,9 +702,9 @@ class OC_FileCache{
 				}
 			}
 		}
-		
+
 		self::cleanFolder($path,$root);
-		
+
 		//update the folder last, so we can calculate the size correctly
 		if(!$root){//filesystem hooks are only valid for the default root
 			OC_Hook::emit('OC_Filesystem','post_write',array('path'=>$path));

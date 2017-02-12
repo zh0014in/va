@@ -32,10 +32,10 @@ OC.Comments = {
             }
         });
     },
-    invite: function (source, uid_commenting_with, permissions, callback) {
+    invite: function (filepath, uid_commenting_with, permissions, callback) {
         $.post(OC.filePath('files_comments', 'ajax', 'invite.php'), {
-            sources: source,
-            uid_shared_with: uid_commenting_with,
+            sources: filepath,
+            uid_commenting_with: uid_commenting_with,
             permissions: permissions
         }, function (result) {
             if (result && result.status === 'success') {
@@ -47,10 +47,10 @@ OC.Comments = {
             }
         });
     },
-    changePermissions: function (source, uid_shared_with, permissions) {
+    changePermissions: function (filepath, uid_commenting_with, permissions) {
         $.post(OC.filePath('files_comments', 'ajax', 'setpermissions.php'), {
-            source: source,
-            uid_shared_with: uid_shared_with,
+            source: filepath,
+            uid_commenting_with: uid_commenting_with,
             permissions: permissions
         }, function (result) {
             if (!result || result.status !== 'success') {
@@ -60,7 +60,7 @@ OC.Comments = {
     },
     showDropDown: function (item, appendTo) {
         OC.Comments.loadItem(item);
-        var html = '<div id="dropdown" class="drop" data-item="' + item + '">';
+        var html = '<div id="commenting_dropdown" class="drop" data-item="' + item + '">';
         html += '<select data-placeholder="User" id="commenting_with" class="chzen-select">';
         html += '<option value=""></option>';
         html += '</select>';
@@ -99,12 +99,12 @@ OC.Comments = {
                 }
             });
         }
-        $('#dropdown').show('blind');
+        $('#commenting_dropdown').show('blind');
         $('#commenting_with').chosen();
     },
     hideDropDown: function (callback) {
-        $('#dropdown').hide('blind', function () {
-            $('#dropdown').remove();
+        $('#commenting_dropdown').hide('blind', function () {
+            $('#commenting_dropdown').remove();
             if (callback) {
                 callback.call();
             }
@@ -116,7 +116,7 @@ OC.Comments = {
         } else {
             var checked = ((permissions > 0) ? 'checked="checked"' : 'style="display:none;"');
             var style = ((permissions == 0) ? 'style="display:none;"' : '');
-            var commentingWith = '<li data-uid_shared_with="' + uid_commenting_with + '">';
+            var commentingWith = '<li data-uid_commenting_with="' + uid_commenting_with + '">';
             commentingWith += uid_commenting_with;
             commentingWith += '<input type="checkbox" name="permissions" id="' + uid_commenting_with + '" class="permissions" ' + checked + ' />';
             commentingWith += '</li>';
@@ -163,8 +163,8 @@ $(document).ready(function () {
             var file = $('#dir').val() + '/' + filename;
             var appendTo = $('tr').filterAttr('data-file', filename).find('td.filename');
             // Check if drop down is already visible for a different file
-            if (($('#dropdown').length > 0)) {
-                if (file != $('#dropdown').data('item')) {
+            if (($('#commenting_dropdown').length > 0)) {
+                if (file != $('#commenting_dropdown').data('item')) {
                     OC.Comments.hideDropDown(function () {
                         $('tr').removeClass('mouseOver');
                         $('tr').filterAttr('data-file', filename).addClass('mouseOver');
@@ -180,8 +180,8 @@ $(document).ready(function () {
     ;
 
     $(this).click(function (event) {
-        if (!($(event.target).hasClass('drop')) && $(event.target).parents().index($('#dropdown')) == -1) {
-            if ($('#dropdown').is(':visible')) {
+        if (!($(event.target).hasClass('drop')) && $(event.target).parents().index($('#commenting_dropdown')) == -1) {
+            if ($('#commenting_dropdown').is(':visible')) {
                 OC.Comments.hideDropDown(function () {
                     $('tr').removeClass('mouseOver');
                 });
@@ -204,7 +204,7 @@ $(document).ready(function () {
     });
 
     $('#commenting_with').live('change', function () {
-        var item = $('#dropdown').data('item');
+        var item = $('#commenting_dropdown').data('item');
         var uid_commenting_with = $(this).val();
 
         OC.Comments.invite(item, uid_commenting_with, 0, function () {
@@ -214,6 +214,6 @@ $(document).ready(function () {
 
     $('.permissions').live('change', function () {
         var permissions = (this.checked) ? 1 : 0;
-        OC.Comments.changePermissions($('#dropdown').data('item'), $(this).parent().data('uid_shared_with'), permissions);
+        OC.Comments.changePermissions($('#commenting_dropdown').data('item'), $(this).parent().data('uid_commenting_with'), permissions);
     });
 });

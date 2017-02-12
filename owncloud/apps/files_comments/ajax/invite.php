@@ -6,7 +6,7 @@ OCP\JSON::checkLoggedIn();
 
 $userDirectory = '/'.OCP\USER::getUser().'/files';
 $sources = explode(';', $_POST['sources']);
-$uid_commenting_with = $_POST['uid_shared_with'];
+$uid_commenting_with = $_POST['uid_commenting_with'];
 $permissions = $_POST['permissions'];
 foreach ($sources as $source) {
 	$file = OC_FileCache::get($source);

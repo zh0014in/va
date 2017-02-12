@@ -305,6 +305,7 @@ $(window).resize(function() {
 var is_editor_shown = false;
 $(document).ready(function(){
 	if(typeof FileActions!=='undefined'){
+
 		FileActions.register('text','Edit','',function(filename){
 			showFileEditor($('#dir').val(),filename);
 			FileActions.fireEvents($('#dir').val(),filename);

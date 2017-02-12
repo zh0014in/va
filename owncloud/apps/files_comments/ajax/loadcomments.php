@@ -12,6 +12,11 @@ $filename = isset($_GET['file']) ? $_GET['file'] : '';
 if(!empty($filename))
 {
     $path = $dir.'/'.$filename;
+    $root=OC_Filesystem::getRoot();
+    if($root=='/'){
+        $root='';
+    }
+    $path=$root.$path;
     $comments = OC_Comment::getComments($path);
     OCP\JSON::success(array('data' => $comments));
 } else {

@@ -167,6 +167,7 @@ class OC_User_Database extends OC_User_Backend {
 		return $users;
 	}
 
+
 	/**
 	 * @brief check if a user exists
 	 * @param string $uid the username

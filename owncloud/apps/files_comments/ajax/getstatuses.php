@@ -12,7 +12,7 @@ if ($rows = OC_Comment::getMySharedItems()) {
 		$source = $rows[$i]['source'];
 		// Strip out user directory
 		$item = substr($source, $dirLength);
-		if ($rows[$i]['uid_shared_with'] == OC_Comment::PUBLICLINK) {
+		if ($rows[$i]['uid_commenting_with'] == OC_Comment::PUBLICLINK) {
 			$items[$item] = true;
 		} else if (!isset($items[$item])) {
 			$items[$item] = false;

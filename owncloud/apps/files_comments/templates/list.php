@@ -12,15 +12,15 @@
 			<?php foreach($_['shared_items'] as $item):?>
 				<tr class="item">
 					<td class="source"><?php echo substr($item['source'], strlen("/".$_SESSION['user_id']."/files/"));?></td>
-					<td class="uid_shared_with"><?php echo $item['uid_shared_with'];?></td>
+					<td class="uid_commenting_with"><?php echo $item['uid_commenting_with'];?></td>
 					<td class="permissions"><?php echo $l->t('Read'); echo($item['permissions'] & OC_COMMENT::WRITE ? ", ".$l->t('Edit') : ""); echo($item['permissions'] & OC_COMMENT::DELETE ? ", ".$l->t('Delete') : "");?></td>
-					<td><button class="delete" data-source="<?php echo $item['source'];?>" data-uid_shared_with="<?php echo $item['uid_shared_with'];?>"><?php echo $l->t('Delete');?></button></td>
+					<td><button class="delete" data-source="<?php echo $item['source'];?>" data-uid_commenting_with="<?php echo $item['uid_commenting_with'];?>"><?php echo $l->t('Delete');?></button></td>
 				</tr>
 			<?php endforeach;?>
 			<tr id="share_item_row">
 				<form action="#" id="share_item">
 					<td class="source"><input placeholder="Item" id="source" /></td>
-					<td class="uid_shared_with"><input placeholder="Share With" id="uid_shared_with" /></td>
+					<td class="uid_commenting_with"><input placeholder="Share With" id="uid_commenting_with" /></td>
 					<td class="permissions"><input placeholder="Permissions" id="permissions" /></td>
 					<td><input type="submit" value="Share" /></td>
 				</form>
