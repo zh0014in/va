@@ -65,8 +65,8 @@ foreach( OC_Files::getdirectorycontent( $dir ) as $i ){
 }
 
 //load commenting files
-//foreach (OC_Comment::getCommentingFilepaths() as $i){
-//    $file = OC_FileCache::get($i);
+foreach (OC_Comment::getCommentingFilepaths() as $i){
+    $file = OC_FileCache::get($i);
 //    if($file['type']=='file'){
 //        $fileinfo=pathinfo($file['name']);
 //        $file['basename']=$fileinfo['filename'];
@@ -80,8 +80,8 @@ foreach( OC_Files::getdirectorycontent( $dir ) as $i ){
 //    if($file['directory']=='/'){
 //        $file['directory']='';
 //    }
-//    $files[] = $file;
-//}
+    $files[] = $file;
+}
 
 // Make breadcrumb
 $breadcrumb = array();
