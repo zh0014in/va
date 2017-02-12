@@ -105,7 +105,6 @@ OC.Comments = {
             var style = ((permissions == 0) ? 'style="display:none;"' : '');
             var commentingWith = '<li data-uid_commenting_with="' + uid_commenting_with + '">';
             commentingWith += uid_commenting_with;
-            commentingWith += '<input type="checkbox" name="permissions" id="' + uid_commenting_with + '" class="permissions" ' + checked + ' />';
             commentingWith += '</li>';
         }
         $(commentingWith).appendTo('#commentingUserList');
