@@ -41,6 +41,7 @@ class OC_Files {
 			$file['directory']=$directory;
 			$file['type']=($file['mimetype']=='httpd/unix-directory')?'dir':'file';
 		}
+
 		usort($files, "fileCmp");//TODO: remove this once ajax is merged
 		return $files;
 	}

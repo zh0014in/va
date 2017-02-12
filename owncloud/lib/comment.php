@@ -33,10 +33,14 @@ class OC_Comment {
         return $result ? true : false;
     }
 
-    public static function getCommentingFiles(){
+    public static function getCommentingFilepaths(){
         $user = OCP\USER::getUser();
-        $query = OC_DB::prepare("SELECT FROM `*PREFIX*commenting` WHERE uid_commenting_with = ?");
-        $result = $query->execute(array($user))->fetchRow();
-        return $result;
+        $query = OC_DB::prepare("SELECT filepath FROM `*PREFIX*commenting` WHERE uid_commenting_with = ?");
+        $result = $query->execute(array($user));
+        $files=array();
+        while( $row = $result->fetchRow()){
+            $files[] = $row['filepath'];
+        }
+        return $files;
     }
 }

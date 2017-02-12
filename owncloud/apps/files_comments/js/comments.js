@@ -4,20 +4,7 @@ OC.Comments = {
     itemGroups: [],
     itemPrivateLink: false,
     users: [],
-    loadIcons: function () {
-        // Cache all icons for shared files
-        $.getJSON(OC.filePath('files_comments', 'ajax', 'getstatuses.php'), function (result) {
-            if (result && result.status === 'success') {
-                $.each(result.data, function (item, hasPrivateLink) {
-                    if (hasPrivateLink) {
-                        OC.Comments.icons[item] = OC.imagePath('core', 'actions/public');
-                    } else {
-                        OC.Comments.icons[item] = OC.imagePath('core', 'actions/info');
-                    }
-                });
-            }
-        });
-    },
+
     loadItem: function (item) {
         $.ajax({
             type: 'GET',
@@ -134,7 +121,6 @@ OC.Comments = {
 $(document).ready(function () {
 
     if (typeof FileActions !== 'undefined') {
-        OC.Comments.loadIcons();
         FileActions.register('all', 'Invite to comment', function (filename) {
             // Return the correct sharing icon
             if (scanFiles.scanning) {
