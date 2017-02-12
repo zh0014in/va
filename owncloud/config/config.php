@@ -10,6 +10,8 @@ $CONFIG = array(
 "dbuser" => 'oc_student',
 "dbpassword" => '5a1d1e840c2da58ac2d5582164cee1b5',
 "installed" => true,
-"debug" => true
+"debug" => true,
+    "mail_smtpname" => "student",
+    "mail_smtppassword"=>"student"
 );
 ?>
