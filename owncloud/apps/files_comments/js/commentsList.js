@@ -9,11 +9,16 @@ function showCommentsList(dir, filename) {
         function (result) {
             if(result.status == 'success'){
                 console.log(result);
+
             }else{
                 OC.dialogs.alert(result.data.message, t('files_comments','An error occurred!'));
             }
         }
     )
+}
+
+function showControls() {
+
 }
 
 

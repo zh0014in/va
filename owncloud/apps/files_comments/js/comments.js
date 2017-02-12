@@ -12,7 +12,7 @@ OC.Comments = {
                     if (hasPrivateLink) {
                         OC.Comments.icons[item] = OC.imagePath('core', 'actions/public');
                     } else {
-                        OC.Comments.icons[item] = OC.imagePath('core', 'actions/shared');
+                        OC.Comments.icons[item] = OC.imagePath('core', 'actions/info');
                     }
                 });
             }
@@ -28,16 +28,14 @@ OC.Comments = {
                 if (result && result.status === 'success') {
                     var item = result.data;
                     OC.Comments.itemUsers = item.users;
-                    OC.Comments.itemGroups = item.groups;
-                    OC.Comments.itemPrivateLink = item.privateLink;
                 }
             }
         });
     },
-    invite: function (source, uid_shared_with, permissions, callback) {
+    invite: function (source, uid_commenting_with, permissions, callback) {
         $.post(OC.filePath('files_comments', 'ajax', 'invite.php'), {
             sources: source,
-            uid_shared_with: uid_shared_with,
+            uid_shared_with: uid_commenting_with,
             permissions: permissions
         }, function (result) {
             if (result && result.status === 'success') {
@@ -63,11 +61,11 @@ OC.Comments = {
     showDropDown: function (item, appendTo) {
         OC.Comments.loadItem(item);
         var html = '<div id="dropdown" class="drop" data-item="' + item + '">';
-        html += '<select data-placeholder="User" id="share_with" class="chzen-select">';
+        html += '<select data-placeholder="User" id="commenting_with" class="chzen-select">';
         html += '<option value=""></option>';
         html += '</select>';
-        html += '<div id="sharedWithList">';
-        html += '<ul id="userList"></ul>';
+        html += '<div id="commentingWithList">';
+        html += '<ul id="commentingUserList"></ul>';
         html += '</div>';
         html += '</div>';
         $(html).appendTo(appendTo);
@@ -80,17 +78,17 @@ OC.Comments = {
                     if (users) {
                         OC.Comments.users = users;
                         $.each(users, function (index, user) {
-                            $(user).appendTo('#share_with');
+                            $(user).appendTo('#commenting_with');
                         });
-                        $('#share_with').trigger('liszt:updated');
+                        $('#commenting_with').trigger('liszt:updated');
                     }
                 }
             });
         } else {
             $.each(OC.Comments.users, function (index, user) {
-                $(user).appendTo('#share_with');
+                $(user).appendTo('#commenting_with');
             });
-            $('#share_with').trigger('liszt:updated');
+            $('#commenting_with').trigger('liszt:updated');
         }
         if (OC.Comments.itemUsers) {
             $.each(OC.Comments.itemUsers, function (index, user) {
@@ -102,7 +100,7 @@ OC.Comments = {
             });
         }
         $('#dropdown').show('blind');
-        $('#share_with').chosen();
+        $('#commenting_with').chosen();
     },
     hideDropDown: function (callback) {
         $('#dropdown').hide('blind', function () {
@@ -112,22 +110,21 @@ OC.Comments = {
             }
         });
     },
-    addCommentPermissionWith: function (uid_comment_with, permissions, parentFolder) {
+    addCommentPermissionWith: function (uid_commenting_with, permissions, parentFolder) {
         if (parentFolder) {
-            var sharedWith = '<li>Parent folder ' + parentFolder + ' shared with ' + uid_comment_with + '</li>';
+            var commentingWith = '<li>Parent folder ' + parentFolder + ' shared with ' + uid_commenting_with + '</li>';
         } else {
             var checked = ((permissions > 0) ? 'checked="checked"' : 'style="display:none;"');
             var style = ((permissions == 0) ? 'style="display:none;"' : '');
-            var sharedWith = '<li data-uid_shared_with="' + uid_comment_with + '">';
-            sharedWith += uid_comment_with;
-            sharedWith += '<input type="checkbox" name="permissions" id="' + uid_comment_with + '" class="permissions" ' + checked + ' />';
-            sharedWith += '<label class="edit" for="' + uid_comment_with + '" ' + style + '>can edit</label>';
-            sharedWith += '</li>';
+            var commentingWith = '<li data-uid_shared_with="' + uid_commenting_with + '">';
+            commentingWith += uid_commenting_with;
+            commentingWith += '<input type="checkbox" name="permissions" id="' + uid_commenting_with + '" class="permissions" ' + checked + ' />';
+            commentingWith += '</li>';
         }
-        $(sharedWith).appendTo('#userList');
+        $(commentingWith).appendTo('#commentingUserList');
         // Remove user from select form
-        $('#share_with option[value="' + uid_comment_with + '"]').remove();
-        $('#share_with').trigger('liszt:updated');
+        $('#commenting_with option[value="' + uid_commenting_with + '"]').remove();
+        $('#commenting_with').trigger('liszt:updated');
     },
     dirname: function (path) {
         return path.replace(/\\/g, '/').replace(/\/[^\/]*$/, '');
@@ -159,7 +156,7 @@ $(document).ready(function () {
                     last = path;
                     path = OC.Comments.dirname(path);
                 }
-                OC.Comments.icons[item] = OC.imagePath('core', 'actions/share');
+                OC.Comments.icons[item] = OC.imagePath('core', 'actions/info');
                 return OC.Comments.icons[item];
             }
         }, function (filename) {
@@ -192,12 +189,12 @@ $(document).ready(function () {
         }
     });
 
-    $('#sharedWithList li').live('mouseenter', function (event) {
+    $('#commentingWithList li').live('mouseenter', function (event) {
         // Show permissions and unshare button
         $(':hidden', this).show();
     });
 
-    $('#sharedWithList li').live('mouseleave', function (event) {
+    $('#commentingWithList li').live('mouseleave', function (event) {
         // Hide permissions and unshare button
         $('a', this).hide();
         if (!$('input:[type=checkbox]', this).is(':checked')) {
@@ -206,34 +203,12 @@ $(document).ready(function () {
         }
     });
 
-    $('#share_with').live('change', function () {
+    $('#commenting_with').live('change', function () {
         var item = $('#dropdown').data('item');
-        var uid_shared_with = $(this).val();
-        var pos = uid_shared_with.indexOf('(group)');
-        var isGroup = false;
-        if (pos != -1) {
-            // Remove '(group)' from uid_shared_with
-            uid_shared_with = uid_shared_with.substr(0, pos);
-            isGroup = true;
-        }
-        OC.Comments.invite(item, uid_shared_with, 0, function () {
-            if (isGroup) {
-                // Reload item because we don't know which users are in the group
-                OC.Comments.loadItem(item);
-                var users;
-                $.each(OC.Comments.itemGroups, function (index, group) {
-                    if (group.gid == uid_shared_with) {
-                        users = group.users;
-                    }
-                });
-                OC.Comments.addCommentPermissionWith(uid_shared_with, 0, users, false);
-            } else {
-                OC.Comments.addCommentPermissionWith(uid_shared_with, 0, false, false);
-            }
-            // Change icon
-            if (!OC.Comments.itemPrivateLink) {
-                OC.Comments.icons[item] = OC.imagePath('core', 'actions/shared');
-            }
+        var uid_commenting_with = $(this).val();
+
+        OC.Comments.invite(item, uid_commenting_with, 0, function () {
+            OC.Comments.addCommentPermissionWith(uid_commenting_with, 0, false);
         });
     });
 

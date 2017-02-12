@@ -55,31 +55,29 @@ class OC_Comment {
 			} else {
 				throw new Exception($uid_commenting_with." is not a user");
 			}
-			foreach ($uid_commenting_with as $uid) {
-				// Check if this item is already shared with the user
-				$checkInvited = OCP\DB::prepare("SELECT filepath FROM *PREFIX*commenting WHERE filepath = ? AND uid_commenting_with ".self::getUsersAndGroups($uid, false));
-				$resultCheckInvited = $checkInvited->execute(array($filepath))->fetchAll();
-				if (count($resultCheckInvited) > 0) {
-					if (!isset($gid)) {
-						throw new Exception("This item is already invited with ".$uid);
-					} else {
-						// Skip this user if sharing with a group
-						continue;
-					}
-				}
-				$query->execute(array($uid_owner, $uid, $filepath));
 
-				// send email to invite user with $uid
-                $email = OC_Preferences::getValue($uid, 'settings', 'email', '');
-                if($email == ''){
-                	throw new Exception("user email does not exist.");
-				}
+            // Check if this item is already shared with the user
+            $checkInvited = OCP\DB::prepare("SELECT filepath FROM *PREFIX*commenting WHERE filepath = ? AND uid_commenting_with ".self::getUsersAndGroups($uid_commenting_with, false));
+            $resultCheckInvited = $checkInvited->execute(array($filepath))->fetchAll();
+            if (count($resultCheckInvited) > 0) {
+                throw new Exception("This item is already invited with ".$uid_commenting_with);
+            }
+            $query->execute(array($uid_owner, $uid_commenting_with, $filepath));
 
-                OC_Mail::send($email,$uid,'Invite to comment file','You are invited to comment on file '.$filepath,$uid_owner);
+            // send email to invite user with $uid_commenting_with
+            $email = OC_Preferences::getValue($uid_commenting_with, 'settings', 'email', '');
+            if($email == ''){
+                throw new Exception("user email does not exist.");
+            }
 
-				// Update mtime of shared folder to invoke a file cache rescan
-				$rootView=new OC_FilesystemView('/');
-			}
+            OC_Mail::send($email,$uid_commenting_with,'Invite to comment file','You are invited to comment on file '.$filepath,$uid_owner);
+
+            // Update mtime of shared folder to invoke a file cache rescan
+            $rootView=new OC_FilesystemView('/');
+
+//			foreach ($uid_commenting_with as $uid) {
+//
+//			}
 		}
 	}
 
@@ -180,16 +178,16 @@ class OC_Comment {
 
 	 /**
 	 * Get the item with the specified source location
-	 * @param $source The source location of the item
+	 * @param $filepath The source location of the item
 	 * @return An array with the users and permissions the item is shared with
 	 */
-	public static function getMySharedItem($source) {
-		$source = self::cleanPath($source);
-		$query = OCP\DB::prepare("SELECT uid_shared_with, permissions FROM *PREFIX*sharing WHERE source = ? AND uid_owner = ?");
-		$result = $query->execute(array($source, OCP\USER::getUser()))->fetchAll();
+	public static function getMyInvitedItem($filepath) {
+		$filepath = self::cleanPath($filepath);
+		$query = OCP\DB::prepare("SELECT uid_commenting_with FROM *PREFIX*commenting WHERE filepath = ? AND uid_owner = ?");
+		$result = $query->execute(array($filepath, OCP\USER::getUser()))->fetchAll();
 		if (count($result) > 0) {
 			return $result;
-		} else if ($originalSource = self::getFilePath($source)) {
+		} else if ($originalSource = self::getFilePath($filepath)) {
 			return $query->execute(array($originalSource, OCP\USER::getUser()))->fetchAll();
 		} else {
 			return false;
@@ -404,7 +402,7 @@ class OC_Comment {
 	*/
 	public static function deleteItem($arguments) {
 		$source = "/".OCP\USER::getUser()."/files".self::cleanPath($arguments['path']);
-		$result = self::getMySharedItem($source);
+		$result = self::getMyInvitedItem($source);
 		if (is_array($result)) {
 			foreach ($result as $item) {
 				self::updateFolder($item['uid_shared_with']);
@@ -427,7 +425,7 @@ class OC_Comment {
 
 	public static function updateItem($arguments) {
 		$source = "/".OCP\USER::getUser()."/files".self::cleanPath($arguments['path']);
-		$result = self::getMySharedItem($source);
+		$result = self::getMyInvitedItem($source);
 		if (is_array($result)) {
 			foreach ($result as $item) {
 				self::updateFolder($item['uid_shared_with']);
