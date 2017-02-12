@@ -1,7 +1,7 @@
 <?php
 
 
- //OC::$CLASSPATH['OC_Share'] = "apps/files_comments/lib_comment.php";
+ OC::$CLASSPATH['OC_Share'] = "apps/files_comments/lib_comment.php";
 // OCP\App::registerAdmin('files_sharing', 'settings');
 // OCP\Util::connectHook("OC_Filesystem", "post_delete", "OC_Share", "deleteItem");
 // OCP\Util::connectHook("OC_Filesystem", "post_rename", "OC_Share", "renameItem");
