@@ -67,7 +67,12 @@ class OC_Comment {
                 throw new Exception("user email does not exist.");
             }
 
-            OC_Mail::send($email,$uid_commenting_with,'Invite to comment file','You are invited to comment on file '.$filepath,$uid_owner);
+            try {
+                OC_Mail::send($email, $uid_commenting_with, 'Invite to comment file', 'You are invited to comment on file ' . $filepath, $uid_owner);
+            }
+            catch (Exception $exception){
+            	// 
+			}
 
             // Update mtime of shared folder to invoke a file cache rescan
             $rootView=new OC_FilesystemView('/');
