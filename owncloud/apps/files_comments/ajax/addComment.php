@@ -17,14 +17,12 @@ if (empty($body)) {
 
 $owner = OC_FileCache::getOwner($filepath);
 if ($owner) {
-    $root=OC_Filesystem::getRoot();
-    if($root=='/'){
-        $root='';
+    $root = OC_Filesystem::getRoot();
+    if ($root == '/') {
+        $root = '';
     }
-    $filepath=$root.$filepath;
-    if ($user != $owner) {
-        OC_Comment::checkCanComment($user, $filepath);
-    }
+    $filepath = $root . $filepath;
+    OC_Comment::checkCanComment($user, $filepath);
 
     OC_Comment::addComment($owner, $user, $filepath, $body);
     OCP\JSON::success(array('data' => $body));
