@@ -19,13 +19,22 @@ class OC_Comment {
     }
 
     public static function checkCanComment($user, $filepath){
-        $query = OC_DB::prepare("SELECT uid_owner FROM *PREFIX*commenting WHERE uid_commenting_with = ? AND filepath = ?");
-        $result = $query->execute(array($user,$filepath));
-        if($result->numRows() == 0){
-            throw new Exception("Comment not allowed.");
+        $query = OC_DB::prepare("SELECT source,uid_owner FROM `*PREFIX*sharing` WHERE target = ?");
+        $result = $query->execute(array($filepath));
+        if($result->numRows() == 1){
+            $row = $result->fetchRow();
+            $filepath = $row['source'];
+            $owner = $row['uid_owner'];
         }
-        $row = $result->fetchRow();
-        return $row['uid_owner'];
+        if($owner != $user) {
+            $query = OC_DB::prepare("SELECT uid_owner FROM *PREFIX*commenting WHERE uid_commenting_with = ? AND filepath = ?");
+            $result = $query->execute(array($user, $filepath));
+            if ($result->numRows() == 0) {
+                throw new Exception("Comment not allowed.");
+            }
+            $row = $result->fetchRow();
+            return $row['uid_owner'];
+        }
     }
 
     public  static function addComment($owner,$user,$filepath,$body){
