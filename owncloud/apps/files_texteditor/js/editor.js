@@ -283,6 +283,7 @@ function hideFileEditor(){
 		});
 		is_editor_shown = false;
 	}
+	$('#comments').remove();
 }
 
 // Reopens the last document
