@@ -165,10 +165,6 @@ function getTemplate(i, step) {
         "<div class='va-progressbar' style='width:" + ((i + 1) * 100 / 4) + "%'>" +
         "</div>" +
         "</div>" +
-        "<div class='popover-navigation'>" +
-        "<button class='btn btn-default' data-role='prev'>« Prev</button>" +
-        "<button class='btn btn-default' data-role='next'>Next »</button>" +
-        "</div>" +
         "</div>";
 }
 
