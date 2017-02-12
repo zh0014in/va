@@ -69,6 +69,17 @@ class OC_FileCache{
 		}
 	}
 
+    public static function getCommenting($path){
+        $query=OC_DB::prepare('SELECT name, ctime,mtime,mimetype,size,encrypted,versioned,writable FROM *PREFIX*fscache WHERE path_hash=?');
+        $result=$query->execute(array(md5($path)))->fetchRow();
+        if(is_array($result)){
+            return $result;
+        }else{
+            OC_Log::write('files','get(): file not found in cache ('.$path.')',OC_Log::DEBUG);
+            return false;
+        }
+    }
+
 	public static function getOwner($path){
 	    $root=OC_Filesystem::getRoot();
         if($root=='/'){

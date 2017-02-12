@@ -66,7 +66,7 @@ foreach( OC_Files::getdirectorycontent( $dir ) as $i ){
 
 //load commenting files
 foreach (OC_Comment::getCommentingFilepaths() as $i){
-    $file = OC_FileCache::get($i);
+    $file = OC_FileCache::getCommenting($i);
     $file['type'] = 'file';
     $file['writable'] = true;
 //    if($file['type']=='file'){
