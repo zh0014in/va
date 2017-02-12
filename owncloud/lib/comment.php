@@ -22,6 +22,13 @@ class OC_Comment {
     }
 
     public  static function addComment($owner,$user,$filepath,$body){
+        $query = OC_DB::prepare("SELECT source FROM `*PREFIX*`sharing WHERE target = ?");
+        $result = $query->execute(array($filepath));
+        if($result->numRows() == 1){
+            $row = $result->fetchRow();
+            $filepath = $row['source'];
+        }
+
         $query = OC_DB::prepare("INSERT INTO `*PREFIX*comments` (`uid_owner`,`uid_createdby`,`body`,`filepath`) VALUES(?,?,?,?)");
         $result = $query->execute( array( $owner, $user,$body,$filepath));
         return $result ? true : false;
