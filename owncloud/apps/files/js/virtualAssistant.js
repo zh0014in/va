@@ -118,7 +118,7 @@ var va = new Va({
             }
         },
         {
-            element: "#fileList",
+            element: "#fileList tr:first-child",
             title: "2. Share & edit",
             content: "Mouseover and click 'share' to share this file, Click on the row to edit file",
             placement: 'bottom',
