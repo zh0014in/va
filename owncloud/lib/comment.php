@@ -9,7 +9,7 @@ class OC_Comment {
             $filepath = $row['source'];
         }
 
-        $query = OC_DB::prepare("SELECT uid_owner,uid_createdby,body,filepath FROM *PREFIX*comments WHERE filepath = ?");
+        $query = OC_DB::prepare("SELECT id, uid_owner,uid_createdby,body,filepath FROM *PREFIX*comments WHERE filepath = ?");
         $result = $query->execute(array($filepath));
         $comments=array();
         while( $row = $result->fetchRow()){
@@ -42,9 +42,9 @@ class OC_Comment {
         return $result ? true : false;
     }
 
-    public static function deleteComment($filepath,$body){
-        $query = OC_DB::prepare("DELETE FROM `*PREFIX*comments` WHERE filepath = ? and body = ?");
-        $result = $query->execute(array($filepath, $body));
+    public static function deleteComment($id){
+        $query = OC_DB::prepare("DELETE FROM `*PREFIX*comments` WHERE id = ?");
+        $result = $query->execute(array($id));
         return $result ? true : false;
     }
 }

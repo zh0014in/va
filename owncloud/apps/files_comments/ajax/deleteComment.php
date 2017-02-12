@@ -6,9 +6,8 @@
 OCP\JSON::checkLoggedIn();
 
 $user = OCP\USER::getUser();
-$filepath = isset($_POST['filepath']) ? $_POST['filepath'] : '';
-$body = isset($_POST['body']) ? $_POST['body'] : '';
-$result = OC_Comment::deleteComment($filepath,$body);
+$id = isset($_POST['id']) ? $_POST['id'] : '';
+$result = OC_Comment::deleteComment($id);
 if($result){
     OCP\JSON::success(array('data' => $result));
 }else{

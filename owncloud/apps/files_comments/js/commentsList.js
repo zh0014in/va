@@ -34,15 +34,15 @@ $(document).ready(function () {
         $('#comments').append(commentInputHtml);
         $('#comments').append(addCommentButtonHtml);
         $.each(comments, function (index, value) {
-            $('#comments').append(generateCommentWrapper(value.uid_owner, value.uid_createdby, value.body,value.filepath));
+            $('#comments').append(generateCommentWrapper(value.uid_owner, value.uid_createdby, value.body,value.id));
         });
         bindEvents();
     }
 
-    function generateCommentWrapper(uid_owner, uid_createdby, body, filepath) {
+    function generateCommentWrapper(uid_owner, uid_createdby, body, id) {
         var deleteButton = '';
         if(oc_current_user == uid_owner || oc_current_user == uid_createdby){
-            deleteButton = '<a id="commentDelete" class="comment_delete" data-body="'+body+'" data-path="'+filepath+'">delete</a>';
+            deleteButton = '<a id="commentDelete" class="comment_delete" data-id="'+id+'">delete</a>';
         }
         return '<div id="commentWrapper" class="comment_wrapper">' +
             '<div id="commentBody" class="comment_body">' + body + '</div>' +
@@ -70,10 +70,9 @@ $(document).ready(function () {
         
         $('.comment_delete').on('click', function () {
             var deleteButton = $(this);
-            var body = deleteButton.attr('data-body');
-            var filepath = deleteButton.attr('data-path');
+            var id = deleteButton.attr('data-id');
             $.post(OC.filePath('files_comments', 'ajax', 'deleteComment.php'),
-                {filepath: filepath,body:body},
+                {id:id},
             function (result) {
                 if(result.status == 'success'){
                     showCommentsList(tdir,tfilename);

@@ -570,8 +570,10 @@ CREATE TABLE IF NOT EXISTS `oc_commenting` (
   `filepath` varchar(128) NOT NULL DEFAULT ''
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 CREATE TABLE IF NOT EXISTS `oc_comments` (
+  `id` int NOT NULL AUTO_INCREMENT,
   `uid_owner` varchar(64) NOT NULL DEFAULT '',
   `uid_createdby` varchar(64) NOT NULL DEFAULT '',
   `filepath` varchar(128) NOT NULL DEFAULT '',
-  `body` varchar(128) NOT NULL DEFAULT ''
+  `body` varchar(128) NOT NULL DEFAULT '',
+  PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
