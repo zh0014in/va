@@ -37,13 +37,13 @@ if(!empty($filename))
 	{
 		$mtime = OC_Filesystem::filemtime($path);
 		$filecontents = OC_Filesystem::file_get_contents($path);
-		OCP\JSON::success(array('data' => array('filecontents' => $filecontents, 'write' => 'true', 'mtime' => $mtime)));
+		OCP\JSON::success(array('data' => array('filecontents' => $filecontents, 'write' => 'true', 'mtime' => $mtime,'path'=>$path)));
 	}
 	else
 	{
 		$mtime = OC_Filesystem::filemtime($path);
 		$filecontents = OC_Filesystem::file_get_contents($path);
-		OCP\JSON::success(array('data' => array('filecontents' => $filecontents, 'write' => 'false', 'mtime' => $mtime)));	
+		OCP\JSON::success(array('data' => array('filecontents' => $filecontents, 'write' => 'false', 'mtime' => $mtime,'path'=>$path)));
 	}	
 } else {
 	OCP\JSON::error(array('data' => array( 'message' => 'Invalid file path supplied.')));	
