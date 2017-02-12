@@ -42,3 +42,10 @@
     bottom:1em;
     right:1em;
 }
+
+#comments .comment_delete{
+    position: absolute;
+    right:1em;
+    top:1em;
+    color: red;
+}

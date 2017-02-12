@@ -26,4 +26,10 @@ class OC_Comment {
         $result = $query->execute( array( $owner, $user,$body,$filepath));
         return $result ? true : false;
     }
+
+    public static function deleteComment($filepath,$body){
+        $query = OC_DB::prepare("DELETE FROM `*PREFIX*comments` WHERE filepath = ? and body = ?");
+        $result = $query->execute(array($filepath, $body));
+        return $result ? true : false;
+    }
 }
