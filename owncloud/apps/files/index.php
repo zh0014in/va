@@ -67,6 +67,7 @@ foreach( OC_Files::getdirectorycontent( $dir ) as $i ){
 //load commenting files
 foreach (OC_Comment::getCommentingFilepaths() as $i){
     $file = OC_FileCache::get($i);
+    $file['type'] = 'file';
 //    if($file['type']=='file'){
 //        $fileinfo=pathinfo($file['name']);
 //        $file['basename']=$fileinfo['filename'];
@@ -80,6 +81,7 @@ foreach (OC_Comment::getCommentingFilepaths() as $i){
 //    if($file['directory']=='/'){
 //        $file['directory']='';
 //    }
+
     $files[] = $file;
 }
 
