@@ -69,7 +69,7 @@ foreach (OC_Comment::getCommentingFilepaths() as $i){
     $file = OC_FileCache::getCommenting($i);
     $file['type'] = 'file';
     $file['writable'] = true;
-    $file['directory'] = str_replace($i,$file['name'],"");
+    $file['name'] = $i;
     if($file['type']=='file'){
         $fileinfo=pathinfo($file['name']);
         $file['basename']=$fileinfo['filename'];
