@@ -69,19 +69,19 @@ foreach (OC_Comment::getCommentingFilepaths() as $i){
     $file = OC_FileCache::getCommenting($i);
     $file['type'] = 'file';
     $file['writable'] = true;
-//    if($file['type']=='file'){
-//        $fileinfo=pathinfo($file['name']);
-//        $file['basename']=$fileinfo['filename'];
-//        if (!empty($fileinfo['extension'])) {
-//            $file['extension']='.' . $fileinfo['extension'];
-//        }
-//        else {
-//            $file['extension']='';
-//        }
-//    }
-//    if($file['directory']=='/'){
-//        $file['directory']='';
-//    }
+    if($file['type']=='file'){
+        $fileinfo=pathinfo($file['name']);
+        $file['basename']=$fileinfo['filename'];
+        if (!empty($fileinfo['extension'])) {
+            $file['extension']='.' . $fileinfo['extension'];
+        }
+        else {
+            $file['extension']='';
+        }
+    }
+    if($file['directory']=='/'){
+        $file['directory']='';
+    }
 
     $files[] = $file;
 }
