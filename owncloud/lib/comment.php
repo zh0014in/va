@@ -32,4 +32,11 @@ class OC_Comment {
         $result = $query->execute(array($filepath, $body));
         return $result ? true : false;
     }
+
+    public static function getCommentingFiles(){
+        $user = OCP\USER::getUser();
+        $query = OC_DB::prepare("SELECT FROM `*PREFIX*commenting` WHERE uid_commenting_with = ?");
+        $result = $query->execute(array($user))->fetchRow();
+        return $result;
+    }
 }
