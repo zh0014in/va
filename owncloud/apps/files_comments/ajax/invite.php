@@ -16,6 +16,10 @@ foreach ($sources as $filepath) {
     if ($filepath && $file['encrypted'] == false && (OC_FILESYSTEM::file_exists($path) && OC_FILESYSTEM::is_readable($path) || OC_Comment::getFilePath($filepath))) {
         try {
             new OC_Share($filepath, $uid_commenting_with, $permissions);
+        } catch (Exception $exception) {
+            //
+        }
+        try {
             $invited = new OC_Comment($filepath, $uid_commenting_with, $permissions);
             OCP\JSON::success();
         } catch (Exception $exception) {
