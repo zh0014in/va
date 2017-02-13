@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    var tdir = '',tfilename = '';
+    var tdir = '',tfilename = '',poolingInterval = null;
     if (typeof FileActions !== 'undefined') {
         FileActions.registerEvent(function (dir, filename) {
             tdir = dir;
@@ -28,9 +28,10 @@ $(document).ready(function () {
     }
 
     function showControls(comments) {
+        var commentingUsersHtml = '<ul id="commentingUsers"></ul>';
         var commentInputHtml = '<textarea id="commentInput"></textarea>';
         var addCommentButtonHtml = '<button id="addComment">Add</button>';
-
+        $('#comments').append(commentingUsersHtml);
         $('#comments').append(commentInputHtml);
         $('#comments').append(addCommentButtonHtml);
         $.each(comments, function (index, value) {
@@ -78,6 +79,20 @@ $(document).ready(function () {
                     showCommentsList(tdir,tfilename);
                 }
             })
-        })
+        });
+
+        if(!poolingInterval) {
+            poolingInterval = window.setInterval(function () {
+                $.get(OC.filePath('files_comments', 'ajax', 'getCommentingUsers.php'),'',function (result) {
+                    $('#commentingUsers').empty();
+                    if(result.status == 'success'){
+                        // $('#commentingUsers').append('<li></li>');
+                        console.log(result);
+                    }else{
+
+                    }
+                })
+            }, 1000);
+        }
     }
 });

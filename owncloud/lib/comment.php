@@ -1,6 +1,17 @@
 <?php
 
+class CommentingUser{
+    public $filepath;
+    public $uid;
+}
+
 class OC_Comment {
+    public static $CommentingUsers = array();
+
+    public static function getCommentingUsers(){
+        return self::$CommentingUsers;
+    }
+
     public static function getComments($filepath){
         $query = OC_DB::prepare("SELECT source FROM `*PREFIX*sharing` WHERE target = ?");
         $result = $query->execute(array($filepath));
@@ -21,6 +32,7 @@ class OC_Comment {
     public static function checkCanComment($user, $filepath){
         $query = OC_DB::prepare("SELECT source,uid_owner FROM `*PREFIX*sharing` WHERE target = ?");
         $result = $query->execute(array($filepath));
+        $owner = '';
         if($result->numRows() == 1){
             $row = $result->fetchRow();
             $filepath = $row['source'];
@@ -40,6 +52,7 @@ class OC_Comment {
     public  static function addComment($owner,$user,$filepath,$body){
         $query = OC_DB::prepare("SELECT source,uid_owner FROM `*PREFIX*sharing` WHERE target = ?");
         $result = $query->execute(array($filepath));
+        $owner = '';
         if($result->numRows() == 1){
             $row = $result->fetchRow();
             $filepath = $row['source'];
@@ -55,5 +68,16 @@ class OC_Comment {
         $query = OC_DB::prepare("DELETE FROM `*PREFIX*comments` WHERE id = ?");
         $result = $query->execute(array($id));
         return $result ? true : false;
+    }
+
+    public static function getSource($filepath){
+        $query = OC_DB::prepare("SELECT source FROM `*PREFIX*sharing` WHERE target = ?");
+        $result = $query->execute(array($filepath));
+        if($result->numRows() == 1){
+            $row = $result->fetchRow();
+            $filepath = $row['source'];
+            return $filepath;
+        }
+        return '';
     }
 }

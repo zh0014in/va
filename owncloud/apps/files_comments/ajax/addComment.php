@@ -23,7 +23,9 @@ if ($owner) {
     }
     $filepath = $root . $filepath;
     try {
-        OC_Comment::checkCanComment($user, $filepath);
+        if($owner != $user) {
+            OC_Comment::checkCanComment($user, $filepath);
+        }
         OC_Comment::addComment($owner, $user, $filepath, $body);
         OCP\JSON::success(array('data' => $body));
     }catch (Exception $exception){

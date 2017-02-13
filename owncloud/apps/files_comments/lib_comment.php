@@ -20,10 +20,9 @@
  *
  */
 
-/**
- * This class manages shared items within the database. 
- */
-class OC_Comment {
+
+
+class OC_Commenting {
 
 	const WRITE = 1;
 	const DELETE = 2;
@@ -31,6 +30,7 @@ class OC_Comment {
 	const PUBLICLINK = "public";
 
 	private $token;
+
       
 	/**
 	 * Share an item, adds an entry into the database

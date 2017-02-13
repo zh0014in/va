@@ -20,7 +20,7 @@ foreach ($sources as $filepath) {
             //
         }
         try {
-            $invited = new OC_Comment($filepath, $uid_commenting_with, $permissions);
+            $invited = new OC_Commenting($filepath, $uid_commenting_with, $permissions);
             OCP\JSON::success();
         } catch (Exception $exception) {
             OCP\Util::writeLog('files_comments', 'Unexpected Error : ' . $exception->getMessage(), OCP\Util::ERROR);

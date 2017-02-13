@@ -10,7 +10,7 @@ $source = $userDirectory . $_GET['item'];
 $path = $source;
 // Search for item and shared parent folders
 while ($path != $userDirectory) {
-    if ($rows = OC_Comment::getMyInvitedItem($path)) {
+    if ($rows = OC_Commenting::getMyInvitedItem($path)) {
         for ($i = 0; $i < count($rows); $i++) {
             $uid_shared_with = $rows[$i]['uid_commenting_with'];
             if ($path == $source) {
