@@ -28,7 +28,7 @@ $(document).ready(function () {
     }
 
     function showControls(comments) {
-        var commentingUsersHtml = '<ul id="commentingUsers"></ul>';
+        var commentingUsersHtml = 'Users commenting:<br/><ul id="commentingUsers"></ul>';
         var commentInputHtml = '<textarea id="commentInput"></textarea>';
         var addCommentButtonHtml = '<button id="addComment">Add</button>';
         $('#comments').append(commentingUsersHtml);
@@ -83,11 +83,15 @@ $(document).ready(function () {
 
         if(!poolingInterval) {
             poolingInterval = window.setInterval(function () {
-                $.get(OC.filePath('files_comments', 'ajax', 'getCommentingUsers.php'),'',function (result) {
+                var filepath = $('#editor').attr('data-dir') + '/' + $('#editor').attr('data-filename');
+                $.get(OC.filePath('files_comments', 'ajax', 'getCommentingUsers.php'),
+                    {filepath:filepath},
+                    function (result) {
                     $('#commentingUsers').empty();
                     if(result.status == 'success'){
-                        // $('#commentingUsers').append('<li></li>');
-                        console.log(result);
+                        $.each(result.data,function (index,value) {
+                            $('#commentingUsers').append('<li>' +value+'</li>');
+                        });
                     }else{
 
                     }

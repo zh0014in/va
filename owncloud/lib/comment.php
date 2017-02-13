@@ -1,15 +1,32 @@
 <?php
 
-class CommentingUser{
-    public $filepath;
-    public $uid;
-}
 
 class OC_Comment {
-    public static $CommentingUsers = array();
 
-    public static function getCommentingUsers(){
-        return self::$CommentingUsers;
+    public static function getCommentingUsers($filepath){
+        $query = OC_DB::prepare("SELECT uid FROM *PREFIX*commentingUsers WHERE filepath = ?");
+        $result = $query->execute(array($filepath));
+        $users=array();
+        while( $row = $result->fetchRow()){
+            $users[] = $row['uid'];
+        }
+        return $users;
+    }
+
+    public static function commenting($uid,$filepath){
+        $users = self::getCommentingUsers($filepath);
+        if(in_array($uid,$users)){
+            return;
+        }
+        $query = OC_DB::prepare("INSERT INTO *PREFIX*commentingUsers (`uid`,`filepath`) VALUES (?,?)");
+        $result = $query->execute(array($uid,$filepath));
+        return $result;
+    }
+
+    public static function unCommenting($uid,$filepath){
+        $query = OC_DB::prepare("DELETE FROM *PREFIX*commentingUsers WHERE UID = ? AND filepath = ?");
+        $result = $query->execute(array($uid,$filepath));
+        return $result;
     }
 
     public static function getComments($filepath){

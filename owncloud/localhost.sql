@@ -567,7 +567,8 @@ INSERT INTO `oc_appconfig`(`appid`, `configkey`, `configvalue`) VALUES ('files_c
 CREATE TABLE IF NOT EXISTS `oc_commenting` (
   `uid_owner` varchar(64) NOT NULL DEFAULT '',
   `uid_commenting_with` varchar(64) NOT NULL DEFAULT '',
-  `filepath` varchar(128) NOT NULL DEFAULT ''
+  `filepath` varchar(128) NOT NULL DEFAULT '',
+  `commenting` bit NOT NULL DEFAULT 0
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 CREATE TABLE IF NOT EXISTS `oc_comments` (
   `id` int NOT NULL AUTO_INCREMENT,
@@ -576,4 +577,8 @@ CREATE TABLE IF NOT EXISTS `oc_comments` (
   `filepath` varchar(128) NOT NULL DEFAULT '',
   `body` varchar(128) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+CREATE TABLE IF NOT EXISTS `oc_commentingUsers` (
+  `uid` varchar(64) NOT NULL DEFAULT '',
+  `filepath` varchar(128) NOT NULL DEFAULT ''
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;

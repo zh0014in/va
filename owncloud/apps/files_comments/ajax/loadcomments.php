@@ -19,15 +19,9 @@ if(!empty($filename))
     $path=$root.$path;
     $source = OC_Comment::getSource($path);
     if($source != ''){
-        $commentingUser = new CommentingUser();
-        $commentingUser->filepath = $source;
-        $commentingUser->uid = $user;
-        OC_Comment::$CommentingUsers[] = $commentingUser;
+        OC_Comment::commenting($user,$source);
     }else{
-        $commentingUser = new CommentingUser();
-        $commentingUser->filepath = $path;
-        $commentingUser->uid = $user;
-        OC_Comment::$CommentingUsers[] = $commentingUser;
+        OC_Comment::commenting($user,$path);
     }
     $comments = OC_Comment::getComments($path);
     OCP\JSON::success(array('data' => $comments));
