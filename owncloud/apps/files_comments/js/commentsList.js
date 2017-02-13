@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    var tdir = '',tfilename = '',poolingInterval = null;
+    var tdir = '', tfilename = '', poolingInterval = null, commentingFilepath = '';
     if (typeof FileActions !== 'undefined') {
         FileActions.registerEvent(function (dir, filename) {
             tdir = dir;
@@ -35,15 +35,15 @@ $(document).ready(function () {
         $('#comments').append(commentInputHtml);
         $('#comments').append(addCommentButtonHtml);
         $.each(comments, function (index, value) {
-            $('#comments').append(generateCommentWrapper(value.uid_owner, value.uid_createdby, value.body,value.id));
+            $('#comments').append(generateCommentWrapper(value.uid_owner, value.uid_createdby, value.body, value.id));
         });
         bindEvents();
     }
 
     function generateCommentWrapper(uid_owner, uid_createdby, body, id) {
         var deleteButton = '';
-        if(oc_current_user == uid_owner || oc_current_user == uid_createdby){
-            deleteButton = '<a id="commentDelete" class="comment_delete" data-id="'+id+'">delete</a>';
+        if (oc_current_user == uid_owner || oc_current_user == uid_createdby) {
+            deleteButton = '<a id="commentDelete" class="comment_delete" data-id="' + id + '">delete</a>';
         }
         return '<div id="commentWrapper" class="comment_wrapper">' +
             '<div id="commentBody" class="comment_body">' + body + '</div>' +
@@ -61,42 +61,50 @@ $(document).ready(function () {
                 $.post(OC.filePath('files_comments', 'ajax', 'addComment.php'),
                     {filepath: filepath, body: commentBody}, function (result) {
                         if (result.status == 'success') {
-                            showCommentsList(tdir,tfilename);
+                            showCommentsList(tdir, tfilename);
                         } else {
                             OC.dialogs.alert(result.data.message, t('files_comments', 'An error occurred!'));
                         }
                     });
             }
         });
-        
+
         $('.comment_delete').on('click', function () {
             var deleteButton = $(this);
             var id = deleteButton.attr('data-id');
             $.post(OC.filePath('files_comments', 'ajax', 'deleteComment.php'),
-                {id:id},
-            function (result) {
-                if(result.status == 'success'){
-                    showCommentsList(tdir,tfilename);
-                }
-            })
-        });
-
-        if(!poolingInterval) {
-            poolingInterval = window.setInterval(function () {
-                var filepath = $('#editor').attr('data-dir') + '/' + $('#editor').attr('data-filename');
-                $.get(OC.filePath('files_comments', 'ajax', 'getCommentingUsers.php'),
-                    {filepath:filepath},
-                    function (result) {
-                    $('#commentingUsers').empty();
-                    if(result.status == 'success'){
-                        $.each(result.data,function (index,value) {
-                            $('#commentingUsers').append('<li>' +value+'</li>');
-                        });
-                    }else{
-
+                {id: id},
+                function (result) {
+                    if (result.status == 'success') {
+                        showCommentsList(tdir, tfilename);
                     }
                 })
+        });
+
+        if (!poolingInterval) {
+            poolingInterval = window.setInterval(function () {
+                var filepath = $('#editor').attr('data-dir') + '/' + $('#editor').attr('data-filename');
+                commentingFilepath = filepath;
+                $.get(OC.filePath('files_comments', 'ajax', 'getCommentingUsers.php'),
+                    {filepath: filepath},
+                    function (result) {
+                        $('#commentingUsers').empty();
+                        if (result.status == 'success') {
+                            $.each(result.data, function (index, value) {
+                                $('#commentingUsers').append('<li>' + value + '</li>');
+                            });
+                        } else {
+
+                        }
+                    })
             }, 1000);
         }
+
+        $("#editor").on("remove", function () {
+            $.post(OC.filePath('files_comments', 'ajax', 'unCommenting.php'),
+                {filepath: commentingFilepath}, function () {
+                    window.clearInterval(poolingInterval);
+                });
+        });
     }
 });
