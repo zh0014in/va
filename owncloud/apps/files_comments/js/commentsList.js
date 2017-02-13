@@ -81,24 +81,22 @@ $(document).ready(function () {
                 })
         });
 
-        if (!poolingInterval) {
-            poolingInterval = window.setInterval(function () {
-                var filepath = $('#editor').attr('data-dir') + '/' + $('#editor').attr('data-filename');
-                commentingFilepath = filepath;
-                $.get(OC.filePath('files_comments', 'ajax', 'getCommentingUsers.php'),
-                    {filepath: filepath},
-                    function (result) {
-                        $('#commentingUsers').empty();
-                        if (result.status == 'success') {
-                            $.each(result.data, function (index, value) {
-                                $('#commentingUsers').append('<li>' + value + '</li>');
-                            });
-                        } else {
+        poolingInterval = window.setInterval(function () {
+            var filepath = $('#editor').attr('data-dir') + '/' + $('#editor').attr('data-filename');
+            commentingFilepath = filepath;
+            $.get(OC.filePath('files_comments', 'ajax', 'getCommentingUsers.php'),
+                {filepath: filepath},
+                function (result) {
+                    $('#commentingUsers').empty();
+                    if (result.status == 'success') {
+                        $.each(result.data, function (index, value) {
+                            $('#commentingUsers').append('<li>' + value + '</li>');
+                        });
+                    } else {
 
-                        }
-                    })
-            }, 1000);
-        }
+                    }
+                })
+        }, 1000);
 
         $("#editor").on("remove", function () {
             $.post(OC.filePath('files_comments', 'ajax', 'unCommenting.php'),
